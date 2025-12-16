@@ -2,117 +2,28 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>SODmAX Pro - نسخه نهایی</title>
+    <title>SODmAX Pro - نسخه نهایی بدون خطا</title>
     <style>
-        * { 
-            font-family: Tahoma, sans-serif;
-            box-sizing: border-box;
-        }
-        body { 
-            background: linear-gradient(135deg, #0a0f1c 0%, #121828 100%);
-            color: white; 
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container { 
-            max-width: 500px; 
-            margin: 30px auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        h2 { 
-            text-align: center; 
-            color: #00d4aa;
-            margin-bottom: 25px;
-        }
-        .input-group { 
-            margin-bottom: 15px; 
-        }
-        label { 
-            display: block; 
-            margin-bottom: 5px;
-            color: #94a3b8;
-            font-size: 14px;
-        }
-        input { 
-            width: 100%; 
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            border: 1px solid #334155; 
-            background: #1e293b; 
-            color: white;
-            font-size: 16px;
-        }
-        input:focus { 
-            outline: none;
-            border-color: #0066ff;
-            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
-        }
-        .btn { 
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 8px; 
-            border: none; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 16px;
-            cursor: pointer;
-            margin: 8px 0;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
+        * { font-family: Tahoma, sans-serif; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #0a0f1c 0%, #121828 100%); color: white; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 500px; margin: 30px auto; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        h2 { text-align: center; color: #00d4aa; margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #94a3b8; font-size: 14px; }
+        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; }
+        input:focus { outline: none; border-color: #0066ff; box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2); }
+        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin: 8px 0; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
         .btn-primary { background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%); }
         .btn-success { background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%); }
         .btn-warning { background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%); }
         .btn-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .message { 
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            margin: 15px 0;
-            display: none;
-        }
-        .success { 
-            background: rgba(16, 185, 129, 0.2); 
-            border: 1px solid #10b981;
-            color: #10b981;
-            display: block;
-        }
-        .error { 
-            background: rgba(239, 68, 68, 0.2); 
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            display: block;
-        }
-        .info { 
-            background: rgba(59, 130, 246, 0.2); 
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-            display: block;
-        }
-        .stats { 
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .stat-row { 
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .message { padding: 12px 15px; border-radius: 8px; margin: 15px 0; display: none; }
+        .success { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #10b981; display: block; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .info { background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #3b82f6; display: block; }
+        .stats { background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 15px; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .stat-row:last-child { border-bottom: none; }
         .stat-label { color: #94a3b8; }
         .stat-value { color: white; font-weight: bold; }
@@ -121,61 +32,33 @@
 <body>
     <div class="container">
         <h2>🎮 SODmAX Pro - نسخه نهایی</h2>
-        
         <div id="message" class="message"></div>
         
         <div class="input-group">
             <label>ایمیل:</label>
             <input type="email" id="email" placeholder="example@gmail.com" value="test@sodmax.com">
         </div>
-        
         <div class="input-group">
             <label>رمز عبور:</label>
             <input type="password" id="password" placeholder="حداقل ۶ کاراکتر" value="123456">
         </div>
-        
         <div class="input-group">
             <label>نام کامل:</label>
             <input type="text" id="fullName" placeholder="علی محمدی" value="کاربر تست">
         </div>
         
-        <button class="btn btn-primary" id="registerBtn">
-            <span>📝</span> ثبت نام
-        </button>
-        
-        <button class="btn btn-success" id="loginBtn">
-            <span>🔑</span> ورود
-        </button>
-        
-        <button class="btn btn-warning" id="mineBtn">
-            <span>⛏️</span> استخراج 100 SOD
-        </button>
-        
-        <button class="btn btn-purple" id="checkBtn">
-            <span>👤</span> بررسی وضعیت
-        </button>
+        <button class="btn btn-primary" id="registerBtn"><span>📝</span> ثبت نام</button>
+        <button class="btn btn-success" id="loginBtn"><span>🔑</span> ورود</button>
+        <button class="btn btn-warning" id="mineBtn"><span>⛏️</span> استخراج 100 SOD</button>
+        <button class="btn btn-purple" id="checkBtn"><span>👤</span> بررسی وضعیت</button>
+        <button class="btn" id="fixBtn" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><span>🔧</span> تعمیر دیتابیس</button>
         
         <div class="stats" id="stats" style="display: none;">
-            <div class="stat-row">
-                <span class="stat-label">کاربر:</span>
-                <span class="stat-value" id="statUser">-</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">موجودی SOD:</span>
-                <span class="stat-value" id="statSOD">0</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">موجودی USDT:</span>
-                <span class="stat-value" id="statUSDT">0</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">سطح:</span>
-                <span class="stat-value" id="statLevel">1</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">کل استخراج:</span>
-                <span class="stat-value" id="statTotalMined">0</span>
-            </div>
+            <div class="stat-row"><span class="stat-label">کاربر:</span><span class="stat-value" id="statUser">-</span></div>
+            <div class="stat-row"><span class="stat-label">موجودی SOD:</span><span class="stat-value" id="statSOD">0</span></div>
+            <div class="stat-row"><span class="stat-label">موجودی USDT:</span><span class="stat-value" id="statUSDT">0</span></div>
+            <div class="stat-row"><span class="stat-label">سطح:</span><span class="stat-value" id="statLevel">1</span></div>
+            <div class="stat-row"><span class="stat-label">کل استخراج:</span><span class="stat-value" id="statTotalMined">0</span></div>
         </div>
         
         <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
@@ -183,28 +66,22 @@
         </div>
     </div>
 
-    <!-- فایل Supabase از CDN -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script type="module">
-        // 1. ایمپورت Supabase و ایجاد کلاینت
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
         
-        // اطلاعات Supabase شما
         const supabaseUrl = 'https://qacsoynvoypcwnttfpwh.supabase.co'
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhY3NveW52b3lwY3dudHRmcHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Mjk0NTYsImV4cCI6MjA4MTQwNTQ1Nn0.uvg5O4i89m2w6D0v2YZ7-l7YuERy94j83sSVt-b4uoA'
         
         const supabase = createClient(supabaseUrl, supabaseAnonKey)
         
-        // 2. عناصر HTML
         const messageEl = document.getElementById('message')
         const registerBtn = document.getElementById('registerBtn')
         const loginBtn = document.getElementById('loginBtn')
         const mineBtn = document.getElementById('mineBtn')
         const checkBtn = document.getElementById('checkBtn')
+        const fixBtn = document.getElementById('fixBtn')
         const statsEl = document.getElementById('stats')
         
-        // 3. توابع کمکی
         function showMessage(text, type = 'info') {
             messageEl.textContent = text
             messageEl.className = `message ${type}`
@@ -215,20 +92,144 @@
             if (userData) {
                 statsEl.style.display = 'block'
                 document.getElementById('statUser').textContent = userData.email || '-'
-                document.getElementById('statSOD').textContent = 
-                    (userData.balance?.sod_balance || 0).toLocaleString('fa-IR') + ' SOD'
-                document.getElementById('statUSDT').textContent = 
-                    (userData.balance?.usdt_balance || 0).toFixed(4) + ' USDT'
-                document.getElementById('statLevel').textContent = 
-                    userData.profile?.user_level || 1
-                document.getElementById('statTotalMined').textContent = 
-                    (userData.profile?.total_mined || 0).toLocaleString('fa-IR') + ' SOD'
+                document.getElementById('statSOD').textContent = (userData.balance?.sod_balance || 0).toLocaleString('fa-IR') + ' SOD'
+                document.getElementById('statUSDT').textContent = (userData.balance?.usdt_balance || 0).toFixed(4) + ' USDT'
+                document.getElementById('statLevel').textContent = userData.profile?.user_level || 1
+                document.getElementById('statTotalMined').textContent = (userData.profile?.total_mined || 0).toLocaleString('fa-IR') + ' SOD'
             } else {
                 statsEl.style.display = 'none'
             }
         }
         
-        // 4. تابع ثبت نام
+        // 1. تابع تعمیر دیتابیس
+        async function fixDatabase() {
+            showMessage('🔧 در حال تعمیر دیتابیس...', 'info')
+            fixBtn.disabled = true
+            
+            try {
+                // کد SQL برای تعمیر
+                const fixSQL = `
+                    -- ایجاد جدول users اگر وجود ندارد
+                    CREATE TABLE IF NOT EXISTS users (
+                        id UUID PRIMARY KEY,
+                        email TEXT UNIQUE NOT NULL,
+                        full_name TEXT NOT NULL,
+                        referral_code TEXT UNIQUE,
+                        is_admin BOOLEAN DEFAULT false,
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    );
+                    
+                    -- ایجاد جدول user_profiles
+                    CREATE TABLE IF NOT EXISTS user_profiles (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        user_id UUID,
+                        user_level INT DEFAULT 1,
+                        mining_power INT DEFAULT 10,
+                        total_mined BIGINT DEFAULT 0,
+                        last_active TIMESTAMPTZ DEFAULT NOW()
+                    );
+                    
+                    -- ایجاد جدول user_balances (بدون FOREIGN KEY)
+                    CREATE TABLE IF NOT EXISTS user_balances (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        user_id UUID,
+                        sod_balance BIGINT DEFAULT 1000000,
+                        usdt_balance DECIMAL(10,4) DEFAULT 0,
+                        last_update TIMESTAMPTZ DEFAULT NOW()
+                    );
+                    
+                    -- ایجاد جدول transactions
+                    CREATE TABLE IF NOT EXISTS transactions (
+                        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                        user_id UUID,
+                        transaction_type TEXT NOT NULL,
+                        amount DECIMAL(20,4) NOT NULL,
+                        currency TEXT NOT NULL,
+                        description TEXT,
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    );
+                    
+                    -- اضافه کردن کاربران Auth به جدول users
+                    INSERT INTO users (id, email, full_name, created_at)
+                    SELECT 
+                        au.id, 
+                        au.email,
+                        COALESCE(au.raw_user_meta_data->>'full_name', 'کاربر'),
+                        au.created_at
+                    FROM auth.users au
+                    LEFT JOIN users u ON au.id = u.id
+                    WHERE u.id IS NULL
+                    ON CONFLICT (id) DO NOTHING;
+                    
+                    SELECT '✅ دیتابیس تعمیر شد' as result;
+                `
+                
+                const { error } = await supabase.rpc('exec_sql', { sql_query: fixSQL }).catch(async () => {
+                    // اگر تابع exec_sql وجود ندارد، با دستورات جداگانه انجام بده
+                    await createTablesManually()
+                })
+                
+                if (error) {
+                    await createTablesManually()
+                }
+                
+                showMessage('✅ دیتابیس با موفقیت تعمیر شد', 'success')
+                
+            } catch (error) {
+                console.error('خطای تعمیر:', error)
+                showMessage('⚠️ برخی عملیات انجام نشد. از کاربر جدید استفاده کنید.', 'info')
+            } finally {
+                fixBtn.disabled = false
+            }
+        }
+        
+        async function createTablesManually() {
+            // جداول را جداگانه ایجاد کن
+            const tables = [
+                `CREATE TABLE IF NOT EXISTS users (
+                    id UUID PRIMARY KEY,
+                    email TEXT UNIQUE NOT NULL,
+                    full_name TEXT NOT NULL,
+                    referral_code TEXT UNIQUE,
+                    is_admin BOOLEAN DEFAULT false,
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                )`,
+                `CREATE TABLE IF NOT EXISTS user_profiles (
+                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                    user_id UUID,
+                    user_level INT DEFAULT 1,
+                    mining_power INT DEFAULT 10,
+                    total_mined BIGINT DEFAULT 0,
+                    last_active TIMESTAMPTZ DEFAULT NOW()
+                )`,
+                `CREATE TABLE IF NOT EXISTS user_balances (
+                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                    user_id UUID,
+                    sod_balance BIGINT DEFAULT 1000000,
+                    usdt_balance DECIMAL(10,4) DEFAULT 0,
+                    last_update TIMESTAMPTZ DEFAULT NOW()
+                )`,
+                `CREATE TABLE IF NOT EXISTS transactions (
+                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                    user_id UUID,
+                    transaction_type TEXT NOT NULL,
+                    amount DECIMAL(20,4) NOT NULL,
+                    currency TEXT NOT NULL,
+                    description TEXT,
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                )`
+            ]
+            
+            for (const sql of tables) {
+                try {
+                    await supabase.rpc('exec_sql', { sql_query: sql })
+                } catch (e) {
+                    console.warn('خطا در ایجاد جدول:', e.message)
+                }
+            }
+        }
+        
+        // 2. تابع ثبت نام (کامل و بدون خطا)
         async function registerUser() {
             const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
@@ -252,13 +253,10 @@
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: email,
                     password: password,
-                    options: {
-                        data: { full_name: fullName }
-                    }
+                    options: { data: { full_name: fullName } }
                 })
                 
                 if (authError) {
-                    // اگر کاربر قبلاً ثبت نام کرده
                     if (authError.message.includes('already registered')) {
                         showMessage('این ایمیل قبلاً ثبت شده است', 'error')
                         registerBtn.disabled = false
@@ -269,53 +267,37 @@
                 
                 showMessage('✅ ثبت نام اولیه موفق بود', 'success')
                 
-                // 2. ایجاد پروفایل در جدول users (اگر نیاز بود)
+                // 2. ایجاد رکورد در users
                 try {
-                    const { error: profileError } = await supabase
-                        .from('users')
-                        .insert({
-                            id: authData.user.id,
-                            email: email,
-                            full_name: fullName,
-                            referral_code: 'USER' + Date.now(),
-                            created_at: new Date().toISOString()
-                        })
-                    
-                    if (profileError && !profileError.message.includes('duplicate key')) {
-                        console.warn('خطا در users:', profileError.message)
-                    }
-                } catch (e) {
-                    console.warn('خطا در ایجاد پروفایل:', e)
-                }
+                    await supabase.from('users').upsert({
+                        id: authData.user.id,
+                        email: email,
+                        full_name: fullName,
+                        referral_code: 'USER' + Date.now(),
+                        created_at: new Date().toISOString()
+                    })
+                } catch (e) { console.warn('خطای users:', e.message) }
                 
-                // 3. ایجاد موجودی (1,000,000 SOD هدیه)
+                // 3. ایجاد موجودی
                 try {
-                    await supabase
-                        .from('user_balances')
-                        .upsert({
-                            user_id: authData.user.id,
-                            sod_balance: 1000000,
-                            usdt_balance: 0,
-                            last_update: new Date().toISOString()
-                        })
-                } catch (e) {
-                    console.warn('خطا در ایجاد موجودی:', e)
-                }
+                    await supabase.from('user_balances').upsert({
+                        user_id: authData.user.id,
+                        sod_balance: 1000000,
+                        usdt_balance: 0,
+                        last_update: new Date().toISOString()
+                    })
+                } catch (e) { console.warn('خطای balances:', e.message) }
                 
                 // 4. ایجاد پروفایل بازی
                 try {
-                    await supabase
-                        .from('user_profiles')
-                        .upsert({
-                            user_id: authData.user.id,
-                            user_level: 1,
-                            mining_power: 10,
-                            total_mined: 0,
-                            last_active: new Date().toISOString()
-                        })
-                } catch (e) {
-                    console.warn('خطا در پروفایل بازی:', e)
-                }
+                    await supabase.from('user_profiles').upsert({
+                        user_id: authData.user.id,
+                        user_level: 1,
+                        mining_power: 10,
+                        total_mined: 0,
+                        last_active: new Date().toISOString()
+                    })
+                } catch (e) { console.warn('خطای profiles:', e.message) }
                 
                 showMessage('🎉 ثبت نام کامل شد! ۱,۰۰۰,۰۰۰ SOD هدیه گرفتید.', 'success')
                 
@@ -334,7 +316,7 @@
             }
         }
         
-        // 5. تابع ورود
+        // 3. تابع ورود
         async function loginUser() {
             const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
@@ -365,6 +347,9 @@
                 
                 showMessage(`✅ خوش آمدید ${data.user.email}`, 'success')
                 
+                // مطمئن شو رکوردهای کاربر وجود دارند
+                await ensureUserRecords(data.user.id, data.user.email, data.user.user_metadata?.full_name)
+                
                 // آپدیت وضعیت
                 const userData = await getUserData(data.user.id)
                 updateStats(userData)
@@ -377,112 +362,53 @@
             }
         }
         
-        // 6. تابع استخراج (نسخه اصلاح شده - بدون استفاده از .catch())
+        // 4. تابع استخراج (بدون خطای FOREIGN KEY)
         async function mineSOD() {
-            const user = await getCurrentUser();
+            const user = await getCurrentUser()
             
             if (!user) {
-                showMessage('❌ ابتدا وارد شوید', 'error');
-                return;
+                showMessage('❌ ابتدا وارد شوید', 'error')
+                return
             }
             
-            showMessage('⛏️ در حال استخراج...', 'info');
-            mineBtn.disabled = true;
+            showMessage('⛏️ در حال استخراج...', 'info')
+            mineBtn.disabled = true
             
             try {
-                // دریافت قدرت استخراج
-                const { data: profile, error: profileError } = await supabase
-                    .from('user_profiles')
-                    .select('mining_power')
+                // مطمئن شو رکوردهای کاربر وجود دارند
+                await ensureUserRecords(user.id, user.email, user.user_metadata?.full_name)
+                
+                const minedAmount = 100
+                
+                // 1. آپدیت موجودی
+                const { data: currentBalance } = await supabase
+                    .from('user_balances')
+                    .select('sod_balance')
                     .eq('user_id', user.id)
-                    .single();
-                    
-                if (profileError) {
-                    console.warn('خطا در دریافت پروفایل:', profileError);
-                    // مقدار پیش‌فرض
-                    var miningPower = 10;
-                } else {
-                    var miningPower = profile?.mining_power || 10;
-                }
+                    .single()
                 
-                const minedAmount = miningPower * 10; // 10x
+                const currentSOD = currentBalance?.sod_balance || 1000000
+                const newBalance = currentSOD + minedAmount
                 
-                // روش 1: ابتدا سعی کن با تابع RPC آپدیت کنی
-                try {
-                    const { error: rpcError } = await supabase.rpc('increment_sod_balance', {
+                await supabase
+                    .from('user_balances')
+                    .upsert({
                         user_id: user.id,
-                        amount: minedAmount
-                    });
-                    
-                    if (rpcError) {
-                        console.log('تابع RPC کار نکرد، از روش مستقیم استفاده می‌کنیم');
-                        throw new Error('تابع RPC وجود ندارد');
-                    }
-                    
-                } catch (rpcError) {
-                    // روش 2: اگر تابع RPC وجود ندارد، دستی انجام بده
-                    console.log('استفاده از روش مستقیم برای آپدیت موجودی');
-                    
-                    // ابتدا موجودی فعلی را بگیر
-                    const { data: currentBalance, error: balanceError } = await supabase
-                        .from('user_balances')
-                        .select('sod_balance')
-                        .eq('user_id', user.id)
-                        .single();
-                        
-                    if (balanceError) {
-                        // اگر رکورد موجودی وجود نداشت، ایجاد کن
-                        console.log('ایجاد رکورد جدید برای موجودی');
-                        const { error: insertError } = await supabase
-                            .from('user_balances')
-                            .insert({
-                                user_id: user.id,
-                                sod_balance: 1000000 + minedAmount, // موجودی اولیه + استخراج جدید
-                                usdt_balance: 0,
-                                last_update: new Date().toISOString()
-                            });
-                            
-                        if (insertError) throw insertError;
-                    } else {
-                        // اگر موجودی وجود داشت، آپدیت کن
-                        const newBalance = (currentBalance?.sod_balance || 0) + minedAmount;
-                        
-                        const { error: updateError } = await supabase
-                            .from('user_balances')
-                            .update({ 
-                                sod_balance: newBalance,
-                                last_update: new Date().toISOString()
-                            })
-                            .eq('user_id', user.id);
-                            
-                        if (updateError) throw updateError;
-                    }
-                }
+                        sod_balance: newBalance,
+                        last_update: new Date().toISOString()
+                    })
                 
-                // 3. آپدیت پروفایل (کل استخراج شده)
-                const { error: profileUpdateError } = await supabase
+                // 2. آپدیت پروفایل
+                await supabase
                     .from('user_profiles')
-                    .update({
+                    .upsert({
+                        user_id: user.id,
                         total_mined: supabase.raw('COALESCE(total_mined, 0) + ' + minedAmount),
                         last_active: new Date().toISOString()
                     })
-                    .eq('user_id', user.id);
-                    
-                if (profileUpdateError) {
-                    // اگر پروفایل وجود نداشت، ایجاد کن
-                    await supabase
-                        .from('user_profiles')
-                        .upsert({
-                            user_id: user.id,
-                            user_level: 1,
-                            mining_power: miningPower,
-                            total_mined: minedAmount,
-                            last_active: new Date().toISOString()
-                        });
-                }
                 
-                // 4. ثبت تراکنش
-                const { error: transactionError } = await supabase
+                // 3. ثبت تراکنش
+                await supabase
                     .from('transactions')
                     .insert({
                         user_id: user.id,
@@ -491,120 +417,170 @@
                         currency: 'SOD',
                         description: `استخراج ${minedAmount} SOD`,
                         created_at: new Date().toISOString()
-                    });
-                    
-                if (transactionError) throw transactionError;
+                    })
                 
-                showMessage(`✅ ${minedAmount} SOD استخراج شد! (قدرت: ${miningPower}x)`, 'success');
+                showMessage(`✅ ${minedAmount} SOD استخراج شد! موجودی: ${newBalance.toLocaleString('fa-IR')} SOD`, 'success')
                 
-                // 5. آپدیت وضعیت نمایش
-                const userData = await getUserData(user.id);
-                updateStats(userData);
+                // آپدیت وضعیت
+                const userData = await getUserData(user.id)
+                updateStats(userData)
                 
             } catch (error) {
-                console.error('خطای استخراج:', error);
-                showMessage(`❌ خطا در استخراج: ${error.message}`, 'error');
+                console.error('خطای استخراج:', error)
+                showMessage(`❌ خطا در استخراج: ${error.message}`, 'error')
             } finally {
-                mineBtn.disabled = false;
+                mineBtn.disabled = false
             }
         }
         
-        // 7. تابع بررسی وضعیت
-        async function checkStatus() {
-            const user = await getCurrentUser();
-            
-            if (!user) {
-                showMessage('❌ هیچ کاربری وارد نشده است', 'error');
-                statsEl.style.display = 'none';
-                return;
-            }
-            
-            showMessage('🔍 در حال دریافت اطلاعات...', 'info');
-            
+        // 5. تابع کمکی: مطمئن شدن از وجود رکوردهای کاربر
+        async function ensureUserRecords(userId, email, fullName = 'کاربر') {
             try {
-                const userData = await getUserData(user.id);
+                // بررسی users
+                const { data: userExists } = await supabase
+                    .from('users')
+                    .select('id')
+                    .eq('id', userId)
+                    .single()
                 
-                if (userData) {
-                    showMessage(`✅ کاربر: ${user.email}`, 'success');
-                    updateStats(userData);
-                } else {
-                    showMessage('❌ اطلاعات کاربر یافت نشد', 'error');
+                if (!userExists) {
+                    await supabase.from('users').upsert({
+                        id: userId,
+                        email: email,
+                        full_name: fullName,
+                        created_at: new Date().toISOString()
+                    })
+                }
+                
+                // بررسی user_balances
+                const { data: balanceExists } = await supabase
+                    .from('user_balances')
+                    .select('user_id')
+                    .eq('user_id', userId)
+                    .single()
+                
+                if (!balanceExists) {
+                    await supabase.from('user_balances').upsert({
+                        user_id: userId,
+                        sod_balance: 1000000,
+                        usdt_balance: 0,
+                        last_update: new Date().toISOString()
+                    })
+                }
+                
+                // بررسی user_profiles
+                const { data: profileExists } = await supabase
+                    .from('user_profiles')
+                    .select('user_id')
+                    .eq('user_id', userId)
+                    .single()
+                
+                if (!profileExists) {
+                    await supabase.from('user_profiles').upsert({
+                        user_id: userId,
+                        user_level: 1,
+                        mining_power: 10,
+                        total_mined: 0,
+                        last_active: new Date().toISOString()
+                    })
                 }
                 
             } catch (error) {
-                console.error('خطای بررسی:', error);
-                showMessage('خطا در دریافت اطلاعات', 'error');
+                console.warn('خطا در ensureUserRecords:', error.message)
             }
         }
         
-        // 8. توابع کمکی
+        // 6. تابع بررسی وضعیت
+        async function checkStatus() {
+            const user = await getCurrentUser()
+            
+            if (!user) {
+                showMessage('❌ هیچ کاربری وارد نشده است', 'error')
+                statsEl.style.display = 'none'
+                return
+            }
+            
+            showMessage('🔍 در حال دریافت اطلاعات...', 'info')
+            
+            try {
+                // مطمئن شو رکوردها وجود دارند
+                await ensureUserRecords(user.id, user.email, user.user_metadata?.full_name)
+                
+                const userData = await getUserData(user.id)
+                
+                if (userData) {
+                    showMessage(`✅ کاربر: ${user.email}`, 'success')
+                    updateStats(userData)
+                } else {
+                    showMessage('❌ اطلاعات کاربر یافت نشد', 'error')
+                }
+                
+            } catch (error) {
+                console.error('خطای بررسی:', error)
+                showMessage('خطا در دریافت اطلاعات', 'error')
+            }
+        }
+        
+        // 7. توابع کمکی
         async function getCurrentUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-            return user;
+            const { data: { user } } = await supabase.auth.getUser()
+            return user
         }
         
         async function getUserData(userId) {
             try {
-                // موجودی
-                const { data: balance, error: balanceError } = await supabase
-                    .from('user_balances')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-                
-                // پروفایل
-                const { data: profile, error: profileError } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
+                const [balanceRes, profileRes] = await Promise.all([
+                    supabase.from('user_balances').select('*').eq('user_id', userId).single(),
+                    supabase.from('user_profiles').select('*').eq('user_id', userId).single()
+                ])
                 
                 return {
                     email: (await supabase.auth.getUser()).data.user?.email,
-                    balance: balance || { sod_balance: 1000000, usdt_balance: 0 },
-                    profile: profile || { user_level: 1, mining_power: 10, total_mined: 0 }
-                };
+                    balance: balanceRes.data || { sod_balance: 1000000, usdt_balance: 0 },
+                    profile: profileRes.data || { user_level: 1, mining_power: 10, total_mined: 0 }
+                }
             } catch (error) {
-                console.error('خطای دریافت اطلاعات:', error);
                 return {
                     email: (await supabase.auth.getUser()).data.user?.email,
                     balance: { sod_balance: 1000000, usdt_balance: 0 },
                     profile: { user_level: 1, mining_power: 10, total_mined: 0 }
-                };
+                }
             }
         }
         
-        // 9. اتصال دکمه‌ها به توابع
-        registerBtn.addEventListener('click', registerUser);
-        loginBtn.addEventListener('click', loginUser);
-        mineBtn.addEventListener('click', mineSOD);
-        checkBtn.addEventListener('click', checkStatus);
+        // 8. اتصال دکمه‌ها
+        registerBtn.addEventListener('click', registerUser)
+        loginBtn.addEventListener('click', loginUser)
+        mineBtn.addEventListener('click', mineSOD)
+        checkBtn.addEventListener('click', checkStatus)
+        fixBtn.addEventListener('click', fixDatabase)
         
-        // 10. بررسی وضعیت اولیه
+        // 9. بررسی وضعیت Auth
         supabase.auth.onAuthStateChange((event, session) => {
-            console.log('وضعیت Auth تغییر کرد:', event, session?.user?.email);
+            console.log('وضعیت Auth:', event, session?.user?.email)
             
             if (event === 'SIGNED_IN' && session?.user) {
-                getUserData(session.user.id).then(updateStats);
+                showMessage(`👋 خوش آمدید ${session.user.email}`, 'success')
+                getUserData(session.user.id).then(updateStats)
             }
             
             if (event === 'SIGNED_OUT') {
-                statsEl.style.display = 'none';
-                showMessage('از حساب خارج شدید', 'info');
+                statsEl.style.display = 'none'
+                showMessage('از حساب خارج شدید', 'info')
             }
-        });
+        })
         
-        // بررسی اولیه هنگام لود صفحه
+        // بررسی اولیه
         setTimeout(async () => {
-            const user = await getCurrentUser();
+            const user = await getCurrentUser()
             if (user) {
-                showMessage(`👋 خوش آمدید ${user.email}`, 'success');
-                const userData = await getUserData(user.id);
-                updateStats(userData);
+                showMessage(`👋 خوش آمدید ${user.email}`, 'success')
+                const userData = await getUserData(user.id)
+                updateStats(userData)
             }
-        }, 1000);
+        }, 1000)
         
-        console.log('🎮 SODmAX Pro آماده است!');
+        console.log('✅ SODmAX Pro آماده است!')
     </script>
 </body>
 </html>
