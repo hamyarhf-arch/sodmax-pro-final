@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت SODmAX Pro</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        /* استایل‌های admin.html را اینجا نگه دارید (کاملاً بدون تغییر) */
+    </style>
+</head>
+<body>
+    <!-- صفحه دسترسی ممنوع -->
+    <div id="accessDenied" class="access-denied" style="display: none;">
+        <div>
+            <div style="font-size: 80px; margin-bottom: 20px;">🚫</div>
+            <h1 style="font-size: 36px; margin-bottom: 20px;">دسترسی ممنوع</h1>
+            <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 30px; max-width: 500px;">
+                شما اجازه دسترسی به پنل مدیریت را ندارید.
+            </p>
+            <button onclick="window.location.href='index.html'" style="background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: 600;">
+                بازگشت به بازی
+            </button>
+        </div>
+    </div>
+    
+    <!-- صفحه لاگین -->
+    <div id="adminLogin" class="login-container" style="display: none;">
+        <div class="login-box">
+            <h1 class="login-title"><span>🔐</span> ورود به پنل مدیریت</h1>
+            <input type="email" id="adminEmail" class="input-field" placeholder="ایمیل مدیر" value="hamyarhf@gmail.com">
+            <input type="password" id="adminPassword" class="input-field" placeholder="رمز عبور">
+            <button class="login-btn" onclick="checkAdminLogin()">ورود به پنل</button>
+            <div id="loginError" class="error-msg">❌ اطلاعات وارد شده صحیح نیست</div>
+        </div>
+    </div>
+    
+    <!-- پنل مدیریت اصلی -->
+    <div id="adminPanel" class="admin-container" style="display: none;">
+        <!-- هدر -->
+        <div class="admin-header">
+            <h1 class="admin-title">پنل مدیریت SODmAX</h1>
+            <button class="logout-btn" onclick="adminLogout()"><span>🚪</span> خروج از پنل</button>
+        </div>
+        
+        <!-- تب‌ها -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('users')">👥 کاربران <span id="usersCountBadge" class="badge">0</span></div>
+                <div class="tab" onclick="showTab('stats')">📊 آمار</div>
+                <div class="tab" onclick="showTab('controls')">⚙️ کنترل</div>
+                <div class="tab" onclick="debugStorage()">🐛 دیباگ</div>
+            </div>
+        </div>
+        
+        <!-- آمار -->
+        <div class="stats-grid">
+            <div class="stat-card"><h3><span>👥</span> کاربران فعال</h3><div class="stat-value" id="activeUsers">۰</div></div>
+            <div class="stat-card"><h3><span>⛏️</span> کل استخراج</h3><div class="stat-value" id="totalMined">۰ SOD</div></div>
+            <div class="stat-card"><h3><span>💰</span> کل SOD</h3><div class="stat-value" id="totalSOD">۰ SOD</div></div>
+            <div class="stat-card"><h3><span>💎</span> کل USDT</h3><div class="stat-value" id="totalUSDT">۰ USDT</div></div>
+        </div>
+        
+        <!-- جدول کاربران -->
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title"><span>📋</span> لیست کاربران</div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="search-box"><input type="text" class="search-input" id="searchUsers" placeholder="جستجوی کاربر..."></div>
+                    <button onclick="showAddUserModal()" style="background: var(--secondary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">➕ کاربر جدید</button>
+                    <button onclick="syncAllUsers()" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">🔄 سینک داده‌ها</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;"><table>
+                <thead><tr><th>نام کاربر</th><th>ایمیل</th><th>SOD</th><th>USDT</th><th>سطح</th><th>کل استخراج</th><th>تاریخ ثبت‌نام</th><th>عملیات</th></tr></thead>
+                <tbody id="usersList"></tbody>
+            </table></div>
+        </div>
+        
+        <!-- کنترل پنل (پنهان) -->
+        <div id="controlPanel" style="display: none;">
+            <div class="control-panel">
+                <div class="control-card">
+                    <h3><span>➕</span> افزودن کاربر جدید</h3>
+                    <div class="form-group"><label class="form-label">نام کامل</label><input type="text" class="form-input" id="newUserName" placeholder="مثال: علی محمدی"></div>
+                    <div class="form-group"><label class="form-label">ایمیل</label><input type="email" class="form-input" id="newUserEmail" placeholder="example@gmail.com"></div>
+                    <div class="form-group"><label class="form-label">موجودی اولیه SOD</label><input type="number" class="form-input" id="newUserSOD" value="1000000"></div>
+                    <button class="login-btn" onclick="createNewUser()" style="background: var(--secondary); margin-top: 20px;">👤 ایجاد کاربر جدید</button>
+                </div>
+                <div class="control-card">
+                    <h3><span>⚡</span> عملیات دسته‌ای</h3>
+                    <div class="form-group"><label class="form-label">افزودن SOD به همه کاربران</label><input type="number" class="form-input" id="batchSOD" placeholder="مقدار SOD"></div>
+                    <button class="login-btn" onclick="addSODToAll()" style="background: var(--primary); margin-bottom: 15px;">💰 افزودن به همه</button>
+                    <div class="form-group"><label class="form-label">تعداد کاربران تست</label><input type="number" class="form-input" id="testUsersCount" value="5" min="1" max="50"></div>
+                    <button class="login-btn" onclick="createTestUsers()" style="background: var(--accent);">🧪 ساخت کاربران تست</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال ویرایش کاربر -->
+    <div class="modal-overlay" id="editUserModal"><div class="modal-content"></div></div>
+
+    <!-- نوتیفیکیشن -->
+    <div class="notification" id="notification"></div>
+
+    <script src="supabase-config.js"></script>
+    <script>
+        // کلاینت ادمین
+        const supabaseAdmin = window.supabase.createClient(
+            'https://zoqsgvgbmxrkemcwxwus.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvcXNndmdibXhya2VtY3d4d3VzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTc4Nzk1MCwiZXhwIjoyMDgxMzYzOTUwfQ.hxIxYP66EhjZyjU_DYquUjci_qYmCATNFkwA3s22ZJU'
+        );
+
+        // ==================== توابع ادمین ====================
+        async function checkAccess() {
+            const user = await SupabaseAPI.getCurrentUser();
+            if (!user) {
+                document.getElementById('accessDenied').style.display = 'flex';
+                return;
+            }
+            
+            // بررسی دسترسی ادمین
+            const { data: userData } = await supabaseAdmin.from('users')
+                .select('is_admin').eq('id', user.id).single();
+            
+            if (userData?.is_admin) {
+                showAdminPanel();
+            } else {
+                document.getElementById('accessDenied').style.display = 'flex';
+            }
+        }
+
+        async function checkAdminLogin() {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            const result = await SupabaseAPI.signInUser(email, password);
+            if (result.success) {
+                setTimeout(() => location.reload(), 500);
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => { document.getElementById('loginError').style.display = 'none'; }, 3000);
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadAdminData();
+        }
+
+        function adminLogout() {
+            SupabaseAPI.supabase.auth.signOut();
+            setTimeout(() => location.reload(), 500);
+        }
+
+        async function loadAdminData() {
+            await loadStats();
+            await loadUsers();
+        }
+
+        async function loadStats() {
+            // آمار کاربران
+            const { count: userCount } = await supabaseAdmin.from('users')
+                .select('*', { count: 'exact', head: true });
+            document.getElementById('activeUsers').textContent = userCount || 0;
+            document.getElementById('usersCountBadge').textContent = userCount || 0;
+            
+            // کل SOD و USDT
+            const { data: balances } = await supabaseAdmin.from('user_balances')
+                .select('sod_balance, usdt_balance');
+            
+            let totalSOD = 0, totalUSDT = 0, totalMined = 0;
+            balances.forEach(b => {
+                totalSOD += b.sod_balance || 0;
+                totalUSDT += b.usdt_balance || 0;
+            });
+            
+            document.getElementById('totalSOD').textContent = formatNumber(totalSOD) + ' SOD';
+            document.getElementById('totalUSDT').textContent = totalUSDT.toFixed(4) + ' USDT';
+            
+            // کل استخراج
+            const { data: profiles } = await supabaseAdmin.from('user_profiles')
+                .select('total_mined');
+            profiles.forEach(p => { totalMined += p.total_mined || 0; });
+            document.getElementById('totalMined').textContent = formatNumber(totalMined) + ' SOD';
+        }
+
+        async function loadUsers() {
+            const { data: users } = await supabaseAdmin.from('users')
+                .select('*, user_profiles(*), user_balances(*)')
+                .order('created_at', { ascending: false });
+            
+            const tbody = document.getElementById('usersList');
+            let html = '';
+            
+            users.forEach(user => {
+                html += `<tr>
+                    <td>${user.full_name || 'نامشخص'}</td>
+                    <td>${user.email}</td>
+                    <td>${formatNumber(user.user_balances[0]?.sod_balance || 0)}</td>
+                    <td>${(user.user_balances[0]?.usdt_balance || 0).toFixed(4)}</td>
+                    <td>${user.user_profiles[0]?.user_level || 1}</td>
+                    <td>${formatNumber(user.user_profiles[0]?.total_mined || 0)}</td>
+                    <td>${new Date(user.created_at).toLocaleDateString('fa-IR')}</td>
+                    <td>
+                        <button onclick="editUser('${user.id}')" style="background: rgba(0,212,170,0.2); color: var(--secondary); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 2px;">✏️</button>
+                        <button onclick="addSOD('${user.id}', 1000000)" style="background: rgba(0,102,255,0.2); color: var(--primary); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 2px;">+1M</button>
+                        <button onclick="deleteUser('${user.id}')" style="background: rgba(255,61,0,0.2); color: var(--danger); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 2px;">🗑️</button>
+                    </td>
+                </tr>`;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center; padding:40px;">هیچ کاربری یافت نشد</td></tr>';
+        }
+
+        async function addSOD(userId, amount) {
+            if (!confirm(`افزودن ${formatNumber(amount)} SOD به این کاربر؟`)) return;
+            
+            const { data: current } = await supabaseAdmin.from('user_balances')
+                .select('sod_balance').eq('user_id', userId).single();
+            
+            const newBalance = (current?.sod_balance || 0) + amount;
+            
+            await supabaseAdmin.from('user_balances')
+                .update({ sod_balance: newBalance }).eq('user_id', userId);
+            
+            alert('✅ موجودی با موفقیت اضافه شد');
+            loadAdminData();
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('⚠️ آیا از حذف این کاربر مطمئن هستید؟')) return;
+            
+            await supabaseAdmin.from('users').delete().eq('id', userId);
+            alert('✅ کاربر حذف شد');
+            loadAdminData();
+        }
+
+        async function createNewUser() {
+            const name = document.getElementById('newUserName').value;
+            const email = document.getElementById('newUserEmail').value;
+            const sod = parseInt(document.getElementById('newUserSOD').value) || 1000000;
+            
+            if (!name || !email) { alert('لطفاً نام و ایمیل را وارد کنید'); return; }
+            
+            const password = 'SodMax2024!';
+            const result = await SupabaseAPI.signUpUser(email, password, name);
+            
+            if (result.success) {
+                // آپدیت موجودی کاربر جدید
+                await supabaseAdmin.from('user_balances')
+                    .update({ sod_balance: sod }).eq('user_id', result.user.id);
+                
+                alert(`✅ کاربر ${name} با موفقیت ایجاد شد`);
+                document.getElementById('newUserName').value = '';
+                document.getElementById('newUserEmail').value = '';
+                loadAdminData();
+            } else {
+                alert('❌ خطا در ایجاد کاربر: ' + result.error);
+            }
+        }
+
+        async function addSODToAll() {
+            const amount = parseInt(document.getElementById('batchSOD').value);
+            if (!amount || amount <= 0) { alert('مقدار معتبر وارد کنید'); return; }
+            
+            if (!confirm(`افزودن ${formatNumber(amount)} SOD به تمام کاربران؟`)) return;
+            
+            const { data: balances } = await supabaseAdmin.from('user_balances').select('user_id, sod_balance');
+            
+            for (const balance of balances) {
+                const newBalance = (balance.sod_balance || 0) + amount;
+                await supabaseAdmin.from('user_balances')
+                    .update({ sod_balance: newBalance }).eq('user_id', balance.user_id);
+            }
+            
+            alert(`✅ ${formatNumber(amount)} SOD به ${balances.length} کاربر اضافه شد`);
+            loadAdminData();
+        }
+
+        async function createTestUsers() {
+            const count = parseInt(document.getElementById('testUsersCount').value) || 5;
+            
+            for (let i = 1; i <= count; i++) {
+                const email = `test${Date.now()}${i}@test.com`;
+                const name = `کاربر تست ${i}`;
+                const password = 'Test123!';
+                
+                await SupabaseAPI.signUpUser(email, password, name);
+            }
+            
+            alert(`✅ ${count} کاربر تست ایجاد شد`);
+            loadAdminData();
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('controlPanel').style.display = (tabName === 'controls') ? 'block' : 'none';
+            if (tabName === 'stats') loadAdminData();
+        }
+
+        function syncAllUsers() {
+            loadAdminData();
+            alert('✅ داده‌ها بروزرسانی شدند');
+        }
+
+        function debugStorage() {
+            console.log('🔍 دیباگ Supabase Storage...');
+            alert('✅ کنسول مرورگر (F12) را بررسی کنید');
+            loadAdminData();
+        }
+
+        function editUser(userId) {
+            alert('✏️ امکان ویرایش در این نسخه غیرفعال است');
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        // راه‌اندازی
+        document.addEventListener('DOMContentLoaded', checkAccess);
+    </script>
+</body>
+</html>

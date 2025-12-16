@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SODmAX Pro | استخراج حرفه‌ای با پاداش USDT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- لینک کتابخانه Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        /* تمام استایل‌های قبلی خود را اینجا نگه دارید - کاملاً بدون تغییر */
+        /* (به دلیل طولانی بودن، استایل‌ها را حذف کردم. استایل‌های قبلی خود را کپی کنید) */
+    </style>
+</head>
+<body>
+    <!-- صفحه ثبت نام -->
+    <div class="register-overlay" id="registerOverlay">
+        <div class="register-container">
+            <div class="register-header">
+                <div class="register-icon">⛏️</div>
+                <h1 class="register-title">ثبت نام در SODmAX</h1>
+                <p class="register-subtitle">برای شروع استخراج و دریافت پاداش USDT ثبت نام کنید</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">نام و نام خانوادگی</label>
+                    <input type="text" class="form-input" placeholder="مثال: علی محمدی" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ایمیل</label>
+                    <input type="email" class="form-input" placeholder="example@gmail.com" id="email" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> ثبت نام و شروع استخراج
+                </button>
+                <div style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 12px;">
+                    با ثبت نام، <a href="#" onclick="showTerms()" style="color: var(--primary-light);">قوانین و شرایط</a> را می‌پذیرید
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- کانتینر اصلی -->
+    <div class="container" id="mainContainer" style="display: none;">
+        <!-- ناوبری -->
+        <nav class="navbar">
+            <div class="nav-background"></div>
+            <a href="#" class="logo">
+                <div class="logo-icon">⛏️</div>
+                <div class="logo-text">
+                    <div class="logo-title">SODmAX Pro</div>
+                    <div class="logo-subtitle">استخراج هوشمند • پاداش واقعی</div>
+                </div>
+            </a>
+            <div class="nav-menu">
+                <a href="dashboard.html"><i class="fas fa-chart-line"></i><span class="nav-text">داشبورد</span></a>
+                <a href="leaderboard.html"><i class="fas fa-trophy"></i><span class="nav-text">لیدربرد</span></a>
+                <a href="missions.html"><i class="fas fa-tasks"></i><span class="nav-text">مأموریت‌ها</span></a>
+                <a href="admin.html" id="adminLink" style="display: none; background: rgba(148,163,184,0.3);">
+                    <i class="fas fa-user-shield"></i><span class="nav-text">مدیریت</span>
+                </a>
+            </div>
+            <div class="wallet-section">
+                <div class="wallet-row">
+                    <div class="wallet-card">
+                        <div class="wallet-label"><i class="fas fa-coins"></i> موجودی SOD</div>
+                        <div class="wallet-amount" id="sodBalance">۰ <span>SOD</span></div>
+                    </div>
+                    <div class="wallet-card">
+                        <div class="wallet-label"><i class="fas fa-gem"></i> موجودی USDT</div>
+                        <div class="wallet-amount" id="usdtBalance">۰ <span>USDT</span></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="showSODSale()">
+                    <i class="fas fa-shopping-cart"></i> خرید SOD
+                </button>
+            </div>
+        </nav>
+
+        <!-- بخش ماینر -->
+        <section class="miner-section">
+            <div class="section-header">
+                <h1 class="section-title">استخراج هوشمند SOD</h1>
+                <p class="section-subtitle">
+                    با پیشرفته‌ترین سیستم استخراج وب۳، هر کلیک شما <span class="highlight">SOD</span> تولید می‌کند.
+                    هر <span class="highlight">۱۰ میلیون SOD</span> معادل <span class="highlight">۰.۰۱ USDT (۱ سَنت)</span> پرداخت می‌شود.
+                </p>
+            </div>
+            <div class="miner-container">
+                <!-- ماینر ویو -->
+                <div class="miner-view">
+                    <div class="miner-display">
+                        <div class="miner-core" id="minerCore">
+                            <div class="core-inner">
+                                <div class="core-content">
+                                    <div class="core-icon">⚡</div>
+                                    <div class="click-reward" id="clickReward">+۱۰۰ SOD</div>
+                                    <div class="click-label">برای استخراج کلیک کنید</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="miner-controls">
+                        <button class="btn btn-primary" id="autoMineBtn"><i class="fas fa-robot"></i> استخراج خودکار</button>
+                        <button class="btn btn-outline" onclick="showSODSale()"><i class="fas fa-shopping-cart"></i> خرید SOD</button>
+                        <button class="btn btn-success" onclick="boostMining()"><i class="fas fa-bolt"></i> افزایش قدرت</button>
+                    </div>
+                </div>
+                <!-- استات ویو -->
+                <div class="stats-view">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-title">درآمد امروز</div>
+                                <div class="stat-value" id="todayEarnings">۰ SOD</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-title">قدرت استخراج</div>
+                                <div class="stat-value" id="miningPower">۱۰x</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-title">ماینرهای فعال</div>
+                                <div class="stat-value">۸,۴۲۱</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-network-wired"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-title">کل استخراج شبکه</div>
+                                <div class="stat-value">۲۴.۵M SOD</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش پنل‌های ویژه فروش SOD -->
+        <section class="sod-sale-section" id="sodSaleSection" style="display: none;">
+            <div class="section-header">
+                <h2 class="section-title">🛒 پنل‌های ویژه فروش SOD</h2>
+                <p class="section-subtitle">SOD بیشتری خریداری کنید و سرعت استخراج خود را افزایش دهید.</p>
+            </div>
+            <div class="sale-plans-grid" id="salePlansGrid"></div>
+        </section>
+
+        <!-- بخش پاداش USDT -->
+        <section class="reward-section">
+            <div class="reward-header">
+                <div>
+                    <h2 class="reward-title">🎁 پاداش USDT واقعی</h2>
+                    <p class="reward-subtitle">هر ۱۰ میلیون SOD معادل <span class="highlight">۰.۰۱ USDT (۱ سَنت)</span> پرداخت می‌شود.</p>
+                </div>
+                <button class="btn btn-success" id="claimUSDTBtn"><i class="fas fa-gift"></i> دریافت پاداش</button>
+            </div>
+            <div class="reward-card">
+                <div class="reward-info">
+                    <h3><i class="fas fa-wallet"></i> موجودی USDT شما</h3>
+                    <div class="reward-amount" id="availableUSDT">۰ USDT</div>
+                </div>
+                <div class="reward-info">
+                    <h3><i class="fas fa-bullseye"></i> تا پاداش بعدی</h3>
+                    <div class="reward-amount" id="nextReward">۰.۰۱ USDT</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="progress-label">پیشرفت فعلی</div>
+                    <div class="progress-value" id="progressText">۰ / ۱۰,۰۰۰,۰۰۰ SOD (۰.۰۱ USDT)</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="stats-view">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-title">آخرین دریافت</div>
+                            <div class="stat-value" id="lastClaimTime">هنوز دریافت نکرده‌اید</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-title">سطح شما</div>
+                            <div class="stat-value" id="userLevel">۱</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- جدول تراکنش‌ها -->
+        <section class="transactions-section">
+            <div class="section-header">
+                <h2 class="section-title">📋 تاریخچه تراکنش‌ها</h2>
+                <p class="section-subtitle">نمایش تمامی فعالیت‌های استخراج، خرید و تراکنش‌های شما</p>
+            </div>
+            <div class="transactions-table">
+                <div id="transactionsList"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- نوتیفیکیشن -->
+    <div class="notification" id="notification">
+        <div class="notification-icon"><i class="fas fa-check"></i></div>
+        <div class="notification-content">
+            <h4 id="notificationTitle">عملیات موفق</h4>
+            <p id="notificationMessage">پیام نمایش داده می‌شود</p>
+        </div>
+    </div>
+
+    <!-- اسکریپت‌های اصلی -->
+    <script src="supabase-config.js"></script>
+    <script src="database-manager.js"></script>
+    <script>
+        // داده‌های بازی (برای نمایش اولیه)
+        const gameData = {
+            sodBalance: 0,
+            usdtBalance: 0,
+            todayEarnings: 0,
+            miningPower: 10,
+            userLevel: 1,
+            usdtProgress: 0,
+            autoMining: false,
+            boostActive: false
+        };
+
+        // ==================== تابع‌های اصلی ====================
+        async function init() {
+            await DB.init();
+            
+            const user = await SupabaseAPI.getCurrentUser();
+            if (user) {
+                // کاربر لاگین کرده
+                hideRegister();
+                await loadUserGameData(user.id);
+                updateUI();
+                checkAdminAccess(user);
+            } else {
+                // کاربر لاگین نکرده
+                showRegister();
+            }
+            
+            console.log('🚀 سیستم SODmAX Pro بارگذاری شد');
+        }
+
+        // بارگذاری اطلاعات بازی از دیتابیس
+        async function loadUserGameData(userId) {
+            try {
+                const data = await SupabaseAPI.getUserFullProfile(userId);
+                if (data) {
+                    gameData.sodBalance = data.user_balances[0]?.sod_balance || 0;
+                    gameData.usdtBalance = data.user_balances[0]?.usdt_balance || 0;
+                    gameData.userLevel = data.user_profiles[0]?.user_level || 1;
+                    gameData.miningPower = data.user_profiles[0]?.mining_power || 10;
+                    
+                    // دریافت فعالیت امروز
+                    const today = new Date().toISOString().split('T')[0];
+                    const { data: activity } = await SupabaseAPI.supabase
+                        .from('daily_activities')
+                        .select('mined_today')
+                        .eq('user_id', userId)
+                        .eq('activity_date', today)
+                        .single();
+                    
+                    gameData.todayEarnings = activity?.mined_today || 0;
+                }
+            } catch (error) {
+                console.error('خطا در بارگذاری اطلاعات:', error);
+            }
+        }
+
+        // ثبت نام فرم
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = 'SodMax2024!';
+            
+            if (!fullName || !email) {
+                showNotification('خطا', 'لطفاً تمام فیلدها را پر کنید');
+                return;
+            }
+            
+            const result = await SupabaseAPI.signUpUser(email, password, fullName);
+            
+            if (result.success) {
+                showNotification('ثبت نام موفق', `خوش آمدید ${fullName}! هدیه ۱ میلیون SOD دریافت کردید.`);
+                setTimeout(async () => {
+                    await loadUserGameData(result.user.id);
+                    startGame();
+                    checkAdminAccess(result.user);
+                }, 1500);
+            } else {
+                showNotification('خطا در ثبت نام', result.error || 'خطای نامشخص');
+            }
+        });
+
+        // کلیک برای استخراج
+        document.getElementById('minerCore').addEventListener('click', async function() {
+            const user = await SupabaseAPI.getCurrentUser();
+            if (!user) {
+                showNotification('خطا', 'لطفاً ابتدا ثبت‌نام یا وارد شوید');
+                document.getElementById('registerOverlay').style.display = 'flex';
+                return;
+            }
+            
+            let earned = gameData.miningPower;
+            if (gameData.boostActive) earned *= 3;
+            
+            // ثبت در دیتابیس
+            const result = await SupabaseAPI.recordMining(user.id, earned);
+            
+            if (result.success) {
+                // آپدیت داده‌های محلی
+                gameData.sodBalance = result.newBalance;
+                gameData.todayEarnings += earned;
+                gameData.usdtProgress += earned;
+                
+                // افکت
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => { this.style.transform = 'scale(1)'; }, 150);
+                
+                // ایجاد افکت متن
+                createMiningEffect(earned);
+                
+                // بررسی پاداش USDT
+                checkUSDT();
+                
+                updateUI();
+                
+                // نمایش پیام
+                setTimeout(() => {
+                    showNotification('استخراج موفق', `+${earned} SOD به موجودی شما اضافه شد`);
+                }, 300);
+            } else {
+                showNotification('خطا', 'استخراج ثبت نشد. لطفاً دوباره تلاش کنید');
+            }
+        });
+
+        // بررسی پاداش USDT
+        function checkUSDT() {
+            if (gameData.usdtProgress >= 10000000) {
+                let usdtEarned = 0.01;
+                gameData.usdtBalance += usdtEarned;
+                gameData.usdtProgress -= 10000000;
+                gameData.lastClaimTime = new Date().toLocaleString('fa-IR');
+                
+                showNotification('🎉 پاداش USDT', usdtEarned.toFixed(4) + ' USDT دریافت کردید!');
+                
+                // شانس ارتقاء سطح
+                if (Math.random() > 0.85) {
+                    gameData.userLevel++;
+                    gameData.miningPower = 10 * gameData.userLevel;
+                    showNotification('⭐ ارتقاء سطح', 'سطح شما به ' + gameData.userLevel + ' ارتقاء یافت!');
+                }
+                
+                updateUI();
+            }
+        }
+
+        // دریافت USDT
+        document.getElementById('claimUSDTBtn').addEventListener('click', async function() {
+            if (gameData.usdtBalance > 0) {
+                showConfirmationModal(
+                    'دریافت پاداش USDT',
+                    `آیا مایل به دریافت ${gameData.usdtBalance.toFixed(4)} USDT هستید؟\n\nاین عملیات در نسخه آزمایشی قابل انجام نیست.`,
+                    () => {
+                        showNotification('توجه', 'دریافت USDT در نسخه آزمایشی غیرفعال است');
+                    }
+                );
+            } else {
+                showNotification('💰 ادامه استخراج', 'هنوز USDT پاداش دریافت نکرده‌اید.');
+            }
+        });
+
+        // آپدیت UI
+        function updateUI() {
+            // موجودی‌ها
+            document.getElementById('sodBalance').innerHTML = formatNumber(gameData.sodBalance) + ' <span>SOD</span>';
+            document.getElementById('usdtBalance').innerHTML = gameData.usdtBalance.toFixed(4) + ' <span>USDT</span>';
+            
+            // آمار
+            document.getElementById('todayEarnings').textContent = formatNumber(gameData.todayEarnings) + ' SOD';
+            document.getElementById('miningPower').textContent = gameData.miningPower + 'x';
+            document.getElementById('clickReward').textContent = '+' + gameData.miningPower + ' SOD';
+            document.getElementById('userLevel').textContent = gameData.userLevel;
+            
+            // پاداش USDT
+            document.getElementById('availableUSDT').textContent = gameData.usdtBalance.toFixed(4) + ' USDT';
+            const progressPercent = (gameData.usdtProgress / 10000000) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+            document.getElementById('progressText').textContent = formatNumber(gameData.usdtProgress) + ' / ۱۰,۰۰۰,۰۰۰ SOD';
+            
+            // آخرین دریافت
+            if (gameData.lastClaimTime) {
+                document.getElementById('lastClaimTime').textContent = gameData.lastClaimTime;
+            }
+        }
+
+        // بررسی دسترسی ادمین
+        async function checkAdminAccess(user) {
+            try {
+                const profile = await SupabaseAPI.getUserFullProfile(user.id);
+                if (profile && profile.is_admin) {
+                    document.getElementById('adminLink').style.display = 'flex';
+                    console.log('✅ دسترسی ادمین فعال شد');
+                }
+            } catch (error) {
+                console.log('⚠️ خطا در تشخیص ادمین:', error);
+            }
+        }
+
+        // نمایش ثبت نام
+        function showRegister() {
+            document.getElementById('registerOverlay').style.display = 'flex';
+            document.getElementById('mainContainer').style.display = 'none';
+        }
+
+        // مخفی کردن ثبت نام
+        function hideRegister() {
+            document.getElementById('registerOverlay').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+        }
+
+        // شروع بازی
+        function startGame() {
+            hideRegister();
+            updateUI();
+            setTimeout(() => {
+                showNotification('🌟 خوش آمدید', 'سیستم استخراج آماده است! کلیک کنید و SOD استخراج کنید.');
+            }, 500);
+        }
+
+        // ==================== تابع‌های کمکی ====================
+        function createMiningEffect(amount) {
+            const effect = document.createElement('div');
+            effect.style.cssText = `
+                position: fixed; color: var(--primary-light); font-weight: 900; font-size: 16px;
+                pointer-events: none; z-index: 10000; text-shadow: 0 0 10px var(--primary);
+                animation: miningEffect 1s ease-out forwards;
+            `;
+            const core = document.getElementById('minerCore');
+            const rect = core.getBoundingClientRect();
+            effect.style.left = rect.left + rect.width / 2 + 'px';
+            effect.style.top = rect.top + rect.height / 2 + 'px';
+            effect.textContent = '+' + formatNumber(amount);
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return Math.floor(num).toLocaleString('fa-IR');
+        }
+
+        function showNotification(title, message) {
+            const notification = document.getElementById('notification');
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => { notification.classList.remove('show'); }, 4000);
+        }
+
+        function showConfirmationModal(title, message, onConfirm) {
+            if (window.confirm(`${title}\n\n${message}`)) { onConfirm(); }
+        }
+
+        function showTerms() {
+            alert('📜 قوانین و شرایط استفاده\n\n۱. کاربر متعهد می‌شود اطلاعات صحیح وارد کند.\n۲. هر کاربر فقط یک حساب می‌تواند داشته باشد.\n۳. مسئولیت حفظ امنیت حساب با کاربر است.');
+        }
+
+        function showSODSale() {
+            document.getElementById('sodSaleSection').style.display = 'block';
+            document.getElementById('sodSaleSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function boostMining() {
+            if (gameData.sodBalance >= 5000) {
+                gameData.sodBalance -= 5000;
+                gameData.boostActive = true;
+                showNotification('⚡ افزایش قدرت', 'قدرت استخراج شما ۳ برابر شد! (۳۰ دقیقه)');
+                setTimeout(() => {
+                    gameData.boostActive = false;
+                    showNotification('پایان بوست', 'زمان افزایش قدرت به پایان رسید.');
+                }, 30 * 60 * 1000);
+                updateUI();
+            } else {
+                showNotification('⚠️ موجودی کافی نیست', 'برای افزایش قدرت به ۵۰۰۰ SOD نیاز دارید.');
+            }
+        }
+
+        // رندر تراکنش‌ها
+        async function renderTransactions() {
+            const list = document.getElementById('transactionsList');
+            list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary)">تاریخچه تراکنش‌ها به زودی...</div>';
+        }
+
+        // رندر پنل‌های فروش SOD
+        function renderSODSalePlans() {
+            const grid = document.getElementById('salePlansGrid');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="sale-plan-card">
+                    <div class="sale-plan-header">
+                        <h3 class="sale-plan-name">پنل استارتر</h3>
+                        <div class="sale-plan-price">۱ <span>USDT</span></div>
+                        <div class="sod-amount">۵,۰۰۰,۰۰۰ SOD</div>
+                    </div>
+                    <ul class="sale-plan-features">
+                        <li><i class="fas fa-check"></i> ۵,۰۰۰,۰۰۰ SOD</li>
+                        <li><i class="fas fa-check"></i> هدیه ۵۰۰,۰۰۰ SOD اضافی</li>
+                        <li><i class="fas fa-check"></i> قدرت استخراج +۵٪</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="buySODPlan(1)">
+                        <i class="fas fa-shopping-cart"></i> خرید پنل
+                    </button>
+                </div>
+                <div class="sale-plan-card featured">
+                    <div class="sale-plan-badge">پیشنهاد ویژه</div>
+                    <div class="sale-plan-header">
+                        <h3 class="sale-plan-name">پنل پرو</h3>
+                        <div class="sale-plan-price">۵ <span>USDT</span></div>
+                        <div class="sod-amount">۳۰,۰۰۰,۰۰۰ SOD</div>
+                    </div>
+                    <ul class="sale-plan-features">
+                        <li><i class="fas fa-check"></i> ۳۰,۰۰۰,۰۰۰ SOD</li>
+                        <li><i class="fas fa-check"></i> هدیه ۳,۰۰۰,۰۰۰ SOD</li>
+                        <li><i class="fas fa-check"></i> قدرت استخراج +۱۵٪</li>
+                        <li><i class="fas fa-check"></i> دسترسی به استخراج خودکار</li>
+                    </ul>
+                    <button class="btn btn-warning" onclick="buySODPlan(2)">
+                        <i class="fas fa-shopping-cart"></i> خرید پنل
+                    </button>
+                </div>
+            `;
+        }
+
+        function buySODPlan(planId) {
+            showNotification('توجه', 'سیستم خرید در نسخه آزمایشی غیرفعال است');
+        }
+
+        // راه‌اندازی اولیه
+        window.addEventListener('DOMContentLoaded', function() {
+            init();
+            renderSODSalePlans();
+            renderTransactions();
+        });
+    </script>
+</body>
+</html>
+

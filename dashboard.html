@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <head>
+    <!-- خط زیر را اضافه کنید -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد کاربر - SODmAX Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0a0f1c 0%, #121828 100%); color: white; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #0066FF, #00D4AA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        nav a { color: #94A3B8; text-decoration: none; margin-right: 20px; transition: 0.3s; }
+        nav a:hover { color: #0066FF; }
+        .btn { background: #0066FF; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .card h3 { color: #00D4AA; margin-bottom: 20px; font-size: 18px; }
+        
+        .invite-section { background: linear-gradient(135deg, #0066FF20, #00D4AA20); padding: 30px; border-radius: 15px; text-align: center; margin: 30px 0; }
+        .invite-code { font-size: 32px; font-weight: bold; background: white; color: #0066FF; padding: 10px 30px; border-radius: 10px; display: inline-block; margin: 20px 0; letter-spacing: 2px; }
+        
+        .stat { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stat:last-child { border-bottom: none; }
+        
+        .progress-bar { height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #0066FF, #00D4AA); border-radius: 5px; }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SODmAX Pro Dashboard</div>
+            <nav>
+                <a href="index.html">بازی اصلی</a>
+                <a href="leaderboard.html">لیدربرد</a>
+                <a href="missions.html">مأموریت‌ها</a>
+                <!-- لینک مدیریت -->
+                <a href="admin.html" id="adminLink" style="display: none; background: rgba(148,163,184,0.3); padding: 6px 12px; border-radius: 6px;">
+                    <i class="fas fa-user-shield"></i>
+                    مدیریت
+                </a>
+                <button class="btn" onclick="logout()">خروج</button>
+            </nav>
+        </header>
+        
+        <div class="invite-section">
+            <h2>🎁 دوستانت رو دعوت کن، پاداش بگیر!</h2>
+            <p>با هر دوستی که از طریق لینک تو ثبت نام کنه، ۱۰٪ از استخراجش رو دریافت می‌کنی</p>
+            <div class="invite-code" id="inviteCode">در حال بارگذاری...</div>
+            <p><small>این کد رو به دوستات بده یا لینک زیر رو اشتراک گذاری کن:</small></p>
+            <input type="text" id="inviteLink" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin: 10px 0;" readonly>
+            <button class="btn" onclick="copyInviteLink()" style="background: #00D4AA; margin-top: 10px;">📋 کپی لینک</button>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>📊 آمار شخصی</h3>
+                <div class="stat">
+                    <span>سطح فعلی:</span>
+                    <span id="userLevel">۱</span>
+                </div>
+                <div class="stat">
+                    <span>استخراج امروز:</span>
+                    <span id="todayMined">۰ SOD</span>
+                </div>
+                <div class="stat">
+                    <span>استخراج کل:</span>
+                    <span id="totalMined">۰ SOD</span>
+                </div>
+                <div class="stat">
+                    <span>موجودی SOD:</span>
+                    <span id="sodBalance">۰</span>
+                </div>
+                <div class="stat">
+                    <span>موجودی USDT:</span>
+                    <span id="usdtBalance">۰</span>
+                </div>
+                <div class="stat">
+                    <span>تاریخ ثبت‌نام:</span>
+                    <span id="registerDate">-</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>👥 سیستم ارجاع</h3>
+                <div class="stat">
+                    <span>تعداد دعوت‌ها:</span>
+                    <span id="referralCount">۰ نفر</span>
+                </div>
+                <div class="stat">
+                    <span>پاداش ارجاع:</span>
+                    <span id="referralReward">۰ SOD</span>
+                </div>
+                <div class="stat">
+                    <span>پاداش USDT:</span>
+                    <span id="referralUSDT">۰</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%" id="referralProgress"></div>
+                </div>
+                <p><small>هر ۱۰ دعوت = ۰.۰۱ USDT پاداش اضافی</small></p>
+            </div>
+            
+            <div class="card">
+                <h3>🎯 پیشرفت سطح</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 10%" id="levelProgress"></div>
+                </div>
+                <p style="text-align: center; margin: 15px 0;" id="levelText">سطح ۱ - تا سطح بعدی: ۹۰۰۰۰ SOD</p>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="goToGame()" style="background: #FF6B35;">⛏️ ادامه استخراج</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📈 تاریخچه اخیر</h3>
+                <div id="recentActivity" style="max-height: 200px; overflow-y: auto;">
+                    <div style="padding: 10px; background: rgba(0,102,255,0.1); border-radius: 8px; margin: 5px 0;">
+                        <div>🎉 ثبت نام در سیستم</div>
+                        <small style="color: #94A3B8;">همین الان</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== سیستم مدیریت ادمین ====================
+        
+        // تشخیص ادمین و نمایش لینک مدیریت
+        function checkAdminAccess() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('sodmaxUserData') || '{}');
+                if (userData.email === "hamyarhf@gmail.com") {
+                    document.getElementById('adminLink').style.display = 'flex';
+                    console.log('✅ دسترسی ادمین فعال شد');
+                }
+            } catch (e) {
+                console.log('⚠️ خطا در تشخیص ادمین:', e);
+            }
+        }
+
+        // ==================== تابع‌های اصلی ====================
+        
+        // بارگذاری اطلاعات کاربر
+        function loadUserData() {
+            try {
+                // اول سینک ساختار داده‌ها
+                syncDataStructures();
+                
+                // اطلاعات از localStorage
+                const userData = JSON.parse(localStorage.getItem('sodmaxUserData') || '{}');
+                const gameData = JSON.parse(localStorage.getItem('sodmaxGameData') || '{}');
+                
+                // اگر کاربر لاگین نکرده، برگرد به صفحه اصلی
+                if (!userData.email) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // تولید کد دعوت
+                const inviteCode = 'INVITE-' + (userData.email.substring(0, 4).toUpperCase()) + (Math.random().toString(36).substr(2, 4).toUpperCase());
+                document.getElementById('inviteCode').textContent = inviteCode;
+                
+                // ساخت لینک دعوت
+                const inviteLink = window.location.origin + '/index.html?ref=' + inviteCode;
+                document.getElementById('inviteLink').value = inviteLink;
+                
+                // آپدیت اطلاعات
+                document.getElementById('userLevel').textContent = gameData.userLevel || 1;
+                document.getElementById('todayMined').textContent = formatNumber(gameData.todayEarnings || 0) + ' SOD';
+                document.getElementById('totalMined').textContent = formatNumber(gameData.totalMined || 0) + ' SOD';
+                document.getElementById('sodBalance').textContent = formatNumber(gameData.sodBalance || 0);
+                document.getElementById('usdtBalance').textContent = (gameData.usdtBalance || 0).toFixed(4);
+                document.getElementById('registerDate').textContent = userData.registerDate || '-';
+                
+                // محاسبه پیشرفت سطح
+                const currentLevel = gameData.userLevel || 1;
+                const nextLevelSOD = currentLevel * 1000000;
+                const progress = Math.min(((gameData.totalMined || 0) / nextLevelSOD) * 100, 100);
+                document.getElementById('levelProgress').style.width = progress + '%';
+                document.getElementById('levelText').textContent = `سطح ${currentLevel} - تا سطح بعدی: ${formatNumber(nextLevelSOD - (gameData.totalMined || 0))} SOD`;
+                
+                // شبیه‌سازی داده‌های ارجاع
+                const referralCount = Math.floor(Math.random() * 5);
+                document.getElementById('referralCount').textContent = referralCount + ' نفر';
+                document.getElementById('referralReward').textContent = formatNumber(referralCount * 50000) + ' SOD';
+                document.getElementById('referralUSDT').textContent = (referralCount * 0.001).toFixed(4);
+                document.getElementById('referralProgress').style.width = (referralCount * 10) + '%';
+                
+                // تاریخچه فعالیت
+                const activities = [
+                    { text: "🎉 ثبت نام در سیستم", time: userData.registerDate || "امروز" },
+                    { text: "⛏️ شروع استخراج", time: "۲ دقیقه پیش" },
+                    { text: "💰 دریافت پاداش اولیه", time: "۵ دقیقه پیش" },
+                    { text: `📈 ${formatNumber(gameData.todayEarnings || 0)} SOD استخراج امروز`, time: "آخرین بروزرسانی" }
+                ];
+                
+                const activityHtml = activities.map(act => `
+                    <div style="padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin: 5px 0;">
+                        <div>${act.text}</div>
+                        <small style="color: #94A3B8;">${act.time}</small>
+                    </div>
+                `).join('');
+                
+                document.getElementById('recentActivity').innerHTML = activityHtml;
+                
+            } catch (error) {
+                console.error('خطا در بارگذاری اطلاعات:', error);
+                document.getElementById('inviteCode').textContent = 'خطا در بارگذاری';
+            }
+        }
+        
+        // سینک ساختار داده‌ها
+        function syncDataStructures() {
+            try {
+                const oldUserData = JSON.parse(localStorage.getItem('sodmaxUserData') || '{}');
+                if (oldUserData.email) {
+                    // اگر ساختار قدیم وجود دارد و ساختار جدید ندارد
+                    const newKey = 'sodmaxUser_' + oldUserData.email;
+                    if (!localStorage.getItem(newKey)) {
+                        localStorage.setItem(newKey, JSON.stringify(oldUserData));
+                        
+                        // همچنین اطلاعات بازی را هم سینک کن
+                        const oldGameData = JSON.parse(localStorage.getItem('sodmaxGameData') || '{}');
+                        localStorage.setItem('sodmaxGame_' + oldUserData.email, JSON.stringify(oldGameData));
+                        
+                        console.log('🔄 داده‌ها در داشبورد سینک شدند');
+                    }
+                }
+            } catch (e) {
+                console.log('⚠️ خطا در سینک داده‌ها:', e);
+            }
+        }
+        
+        // کپی لینک دعوت
+        function copyInviteLink() {
+            const linkInput = document.getElementById('inviteLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); // برای موبایل
+            document.execCommand('copy');
+            
+            // نمایش پیام موفقیت
+            const btn = document.querySelector('button[onclick="copyInviteLink()"]');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ کپی شد!';
+            btn.style.background = '#00D4AA';
+            
+            // نمایش نوتیفیکیشن
+            alert('لینک دعوت کپی شد!');
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }
+        
+        // فرمت اعداد
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        // بازگشت به بازی
+        function goToGame() {
+            window.location.href = 'index.html';
+        }
+        
+        // خروج
+        function logout() {
+            localStorage.removeItem('sodmaxUserData');
+            localStorage.removeItem('sodmaxGameData');
+            window.location.href = 'index.html';
+        }
+        
+        // ==================== راه‌اندازی ====================
+        
+        // بارگذاری اولیه
+        window.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            checkAdminAccess();
+        });
+    </script>
+    <!-- قبل از </body> -->
+<script src="supabase-config.js"></script>
+<script>
+    // کد ساده برای بررسی لاگین
+    async function checkLogin() {
+        const user = await SupabaseAPI.getCurrentUser();
+        if (!user) window.location.href = 'index.html';
+    }
+    checkLogin();
+</script>
+</body>
+</html>
