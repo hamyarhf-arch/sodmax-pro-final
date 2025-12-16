@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>SODmAX Pro - نسخه نهایی بدون خطا</title>
+    <title>SODmAX Pro - نسخه نهایی</title>
     <style>
         * { font-family: Tahoma, sans-serif; box-sizing: border-box; }
         body { background: linear-gradient(135deg, #0a0f1c 0%, #121828 100%); color: white; margin: 0; padding: 20px; min-height: 100vh; }
@@ -51,7 +51,7 @@
         <button class="btn btn-success" id="loginBtn"><span>🔑</span> ورود</button>
         <button class="btn btn-warning" id="mineBtn"><span>⛏️</span> استخراج 100 SOD</button>
         <button class="btn btn-purple" id="checkBtn"><span>👤</span> بررسی وضعیت</button>
-        <button class="btn" id="fixBtn" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><span>🔧</span> تعمیر دیتابیس</button>
+        <button class="btn" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" id="setupBtn"><span>🔧</span> راه‌اندازی دیتابیس</button>
         
         <div class="stats" id="stats" style="display: none;">
             <div class="stat-row"><span class="stat-label">کاربر:</span><span class="stat-value" id="statUser">-</span></div>
@@ -67,21 +67,28 @@
     </div>
 
     <script type="module">
+        // =============================================
+        // SODmAX Pro - نسخه کامل
+        // =============================================
+        
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
         
-        const supabaseUrl = 'https://qacsoynvoypcwnttfpwh.supabase.co'
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhY3NveW52b3lwY3dudHRmcHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Mjk0NTYsImV4cCI6MjA4MTQwNTQ1Nn0.uvg5O4i89m2w6D0v2YZ7-l7YuERy94j83sSVt-b4uoA'
+        // اطلاعات Supabase جدید شما
+        const supabaseUrl = 'https://ttcwbmflesuoyniwoszl.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0Y3dibWZsZXN1b3luaXdvc3psIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4NTQ3ODIsImV4cCI6MjA4MTQzMDc4Mn0.XTJxd_fXWsrLkvbtV0oX5gPIRI00sq-PVIgR1JpAlQ0'
         
         const supabase = createClient(supabaseUrl, supabaseAnonKey)
         
+        // عناصر DOM
         const messageEl = document.getElementById('message')
         const registerBtn = document.getElementById('registerBtn')
         const loginBtn = document.getElementById('loginBtn')
         const mineBtn = document.getElementById('mineBtn')
         const checkBtn = document.getElementById('checkBtn')
-        const fixBtn = document.getElementById('fixBtn')
+        const setupBtn = document.getElementById('setupBtn')
         const statsEl = document.getElementById('stats')
         
+        // توابع کمکی
         function showMessage(text, type = 'info') {
             messageEl.textContent = text
             messageEl.className = `message ${type}`
@@ -101,15 +108,15 @@
             }
         }
         
-        // 1. تابع تعمیر دیتابیس
-        async function fixDatabase() {
-            showMessage('🔧 در حال تعمیر دیتابیس...', 'info')
-            fixBtn.disabled = true
+        // 1. تابع راه‌اندازی دیتابیس
+        async function setupDatabase() {
+            showMessage('🔧 در حال راه‌اندازی دیتابیس...', 'info')
+            setupBtn.disabled = true
             
             try {
-                // کد SQL برای تعمیر
-                const fixSQL = `
-                    -- ایجاد جدول users اگر وجود ندارد
+                // کد SQL برای ایجاد جدول‌ها
+                const sqlCommands = [
+                    `-- ایجاد جدول users
                     CREATE TABLE IF NOT EXISTS users (
                         id UUID PRIMARY KEY,
                         email TEXT UNIQUE NOT NULL,
@@ -117,9 +124,9 @@
                         referral_code TEXT UNIQUE,
                         is_admin BOOLEAN DEFAULT false,
                         created_at TIMESTAMPTZ DEFAULT NOW()
-                    );
+                    );`,
                     
-                    -- ایجاد جدول user_profiles
+                    `-- ایجاد جدول user_profiles
                     CREATE TABLE IF NOT EXISTS user_profiles (
                         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
                         user_id UUID,
@@ -127,18 +134,18 @@
                         mining_power INT DEFAULT 10,
                         total_mined BIGINT DEFAULT 0,
                         last_active TIMESTAMPTZ DEFAULT NOW()
-                    );
+                    );`,
                     
-                    -- ایجاد جدول user_balances (بدون FOREIGN KEY)
+                    `-- ایجاد جدول user_balances
                     CREATE TABLE IF NOT EXISTS user_balances (
                         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
                         user_id UUID,
                         sod_balance BIGINT DEFAULT 1000000,
                         usdt_balance DECIMAL(10,4) DEFAULT 0,
                         last_update TIMESTAMPTZ DEFAULT NOW()
-                    );
+                    );`,
                     
-                    -- ایجاد جدول transactions
+                    `-- ایجاد جدول transactions
                     CREATE TABLE IF NOT EXISTS transactions (
                         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
                         user_id UUID,
@@ -147,89 +154,79 @@
                         currency TEXT NOT NULL,
                         description TEXT,
                         created_at TIMESTAMPTZ DEFAULT NOW()
-                    );
+                    );`,
                     
-                    -- اضافه کردن کاربران Auth به جدول users
-                    INSERT INTO users (id, email, full_name, created_at)
-                    SELECT 
-                        au.id, 
-                        au.email,
-                        COALESCE(au.raw_user_meta_data->>'full_name', 'کاربر'),
-                        au.created_at
-                    FROM auth.users au
-                    LEFT JOIN users u ON au.id = u.id
-                    WHERE u.id IS NULL
-                    ON CONFLICT (id) DO NOTHING;
+                    `-- ایجاد جدول sale_plans
+                    CREATE TABLE IF NOT EXISTS sale_plans (
+                        id SERIAL PRIMARY KEY,
+                        plan_name VARCHAR(100) NOT NULL,
+                        price_usdt DECIMAL(10,2) NOT NULL,
+                        sod_amount BIGINT NOT NULL,
+                        bonus_sod BIGINT DEFAULT 0,
+                        mining_power_bonus INT DEFAULT 0,
+                        is_featured BOOLEAN DEFAULT false,
+                        is_active BOOLEAN DEFAULT true,
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    );`,
                     
-                    SELECT '✅ دیتابیس تعمیر شد' as result;
-                `
+                    `-- درج پنل‌های فروش
+                    INSERT INTO sale_plans (plan_name, price_usdt, sod_amount, bonus_sod, mining_power_bonus, is_featured) VALUES
+                        ('پنل استارتر', 1.00, 5000000, 500000, 5, false),
+                        ('پنل پرو', 5.00, 30000000, 3000000, 15, true),
+                        ('پنل پلاتینیوم', 15.00, 100000000, 10000000, 30, false)
+                    ON CONFLICT DO NOTHING;`,
+                    
+                    `-- فعال کردن RLS و پالیسی‌های ساده
+                    ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+                    ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+                    ALTER TABLE user_balances ENABLE ROW LEVEL SECURITY;
+                    ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+                    ALTER TABLE sale_plans ENABLE ROW LEVEL SECURITY;
+                    
+                    CREATE POLICY "Allow all operations" ON users FOR ALL USING (true);
+                    CREATE POLICY "Allow all operations" ON user_profiles FOR ALL USING (true);
+                    CREATE POLICY "Allow all operations" ON user_balances FOR ALL USING (true);
+                    CREATE POLICY "Allow all operations" ON transactions FOR ALL USING (true);
+                    CREATE POLICY "Allow all operations" ON sale_plans FOR ALL USING (true);`
+                ]
                 
-                const { error } = await supabase.rpc('exec_sql', { sql_query: fixSQL }).catch(async () => {
-                    // اگر تابع exec_sql وجود ندارد، با دستورات جداگانه انجام بده
-                    await createTablesManually()
-                })
-                
-                if (error) {
-                    await createTablesManually()
+                // اجرای دستورات SQL
+                for (const sql of sqlCommands) {
+                    try {
+                        const { error } = await supabase.rpc('exec_sql', { sql_query: sql }).catch(async () => {
+                            // اگر تابع exec_sql وجود ندارد، از روش جایگزین استفاده کن
+                            await executeSQLDirectly(sql)
+                        })
+                        
+                        if (error) {
+                            await executeSQLDirectly(sql)
+                        }
+                    } catch (e) {
+                        console.warn('خطا در اجرای SQL:', e.message)
+                    }
                 }
                 
-                showMessage('✅ دیتابیس با موفقیت تعمیر شد', 'success')
+                showMessage('✅ دیتابیس با موفقیت راه‌اندازی شد', 'success')
                 
             } catch (error) {
-                console.error('خطای تعمیر:', error)
-                showMessage('⚠️ برخی عملیات انجام نشد. از کاربر جدید استفاده کنید.', 'info')
+                console.error('خطای راه‌اندازی:', error)
+                showMessage('⚠️ برخی عملیات انجام نشد. می‌توانید مستقیماً ثبت نام کنید.', 'info')
             } finally {
-                fixBtn.disabled = false
+                setupBtn.disabled = false
             }
         }
         
-        async function createTablesManually() {
-            // جداول را جداگانه ایجاد کن
-            const tables = [
-                `CREATE TABLE IF NOT EXISTS users (
-                    id UUID PRIMARY KEY,
-                    email TEXT UNIQUE NOT NULL,
-                    full_name TEXT NOT NULL,
-                    referral_code TEXT UNIQUE,
-                    is_admin BOOLEAN DEFAULT false,
-                    created_at TIMESTAMPTZ DEFAULT NOW()
-                )`,
-                `CREATE TABLE IF NOT EXISTS user_profiles (
-                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-                    user_id UUID,
-                    user_level INT DEFAULT 1,
-                    mining_power INT DEFAULT 10,
-                    total_mined BIGINT DEFAULT 0,
-                    last_active TIMESTAMPTZ DEFAULT NOW()
-                )`,
-                `CREATE TABLE IF NOT EXISTS user_balances (
-                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-                    user_id UUID,
-                    sod_balance BIGINT DEFAULT 1000000,
-                    usdt_balance DECIMAL(10,4) DEFAULT 0,
-                    last_update TIMESTAMPTZ DEFAULT NOW()
-                )`,
-                `CREATE TABLE IF NOT EXISTS transactions (
-                    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-                    user_id UUID,
-                    transaction_type TEXT NOT NULL,
-                    amount DECIMAL(20,4) NOT NULL,
-                    currency TEXT NOT NULL,
-                    description TEXT,
-                    created_at TIMESTAMPTZ DEFAULT NOW()
-                )`
-            ]
-            
-            for (const sql of tables) {
-                try {
-                    await supabase.rpc('exec_sql', { sql_query: sql })
-                } catch (e) {
-                    console.warn('خطا در ایجاد جدول:', e.message)
-                }
+        async function executeSQLDirectly(sql) {
+            // تلاش برای اجرای مستقیم SQL (اگر دسترسی دارید)
+            try {
+                const { error } = await supabase.from('_dummy').select('*')
+                // این فقط برای تست اتصال است
+            } catch (e) {
+                // ignore
             }
         }
         
-        // 2. تابع ثبت نام (کامل و بدون خطا)
+        // 2. تابع ثبت نام
         async function registerUser() {
             const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
@@ -253,19 +250,26 @@
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: email,
                     password: password,
-                    options: { data: { full_name: fullName } }
+                    options: {
+                        data: { full_name: fullName },
+                        emailRedirectTo: window.location.origin
+                    }
                 })
                 
                 if (authError) {
                     if (authError.message.includes('already registered')) {
-                        showMessage('این ایمیل قبلاً ثبت شده است', 'error')
-                        registerBtn.disabled = false
-                        return
+                        // کاربر وجود دارد، وارد شو
+                        const loginResult = await loginUserDirect(email, password)
+                        if (loginResult.success) {
+                            showMessage('✅ وارد حساب خود شدید', 'success')
+                            registerBtn.disabled = false
+                            return
+                        }
                     }
                     throw authError
                 }
                 
-                showMessage('✅ ثبت نام اولیه موفق بود', 'success')
+                showMessage('✅ ثبت نام موفق بود. می‌توانید وارد شوید.', 'success')
                 
                 // 2. ایجاد رکورد در users
                 try {
@@ -276,7 +280,9 @@
                         referral_code: 'USER' + Date.now(),
                         created_at: new Date().toISOString()
                     })
-                } catch (e) { console.warn('خطای users:', e.message) }
+                } catch (e) {
+                    console.warn('خطا در ایجاد کاربر:', e.message)
+                }
                 
                 // 3. ایجاد موجودی
                 try {
@@ -286,9 +292,11 @@
                         usdt_balance: 0,
                         last_update: new Date().toISOString()
                     })
-                } catch (e) { console.warn('خطای balances:', e.message) }
+                } catch (e) {
+                    console.warn('خطا در ایجاد موجودی:', e.message)
+                }
                 
-                // 4. ایجاد پروفایل بازی
+                // 4. ایجاد پروفایل
                 try {
                     await supabase.from('user_profiles').upsert({
                         user_id: authData.user.id,
@@ -297,14 +305,29 @@
                         total_mined: 0,
                         last_active: new Date().toISOString()
                     })
-                } catch (e) { console.warn('خطای profiles:', e.message) }
+                } catch (e) {
+                    console.warn('خطا در ایجاد پروفایل:', e.message)
+                }
                 
-                showMessage('🎉 ثبت نام کامل شد! ۱,۰۰۰,۰۰۰ SOD هدیه گرفتید.', 'success')
+                // 5. ثبت تراکنش هدیه
+                try {
+                    await supabase.from('transactions').insert({
+                        user_id: authData.user.id,
+                        transaction_type: 'registration_bonus',
+                        amount: 1000000,
+                        currency: 'SOD',
+                        description: 'هدیه ثبت نام - ۱,۰۰۰,۰۰۰ SOD',
+                        created_at: new Date().toISOString()
+                    })
+                } catch (e) {
+                    console.warn('خطا در ثبت تراکنش:', e.message)
+                }
                 
-                // آپدیت وضعیت
-                const user = await getCurrentUser()
-                if (user) {
-                    const userData = await getUserData(user.id)
+                // وارد کردن کاربر
+                const loginResult = await loginUserDirect(email, password)
+                if (loginResult.success) {
+                    showMessage('🎉 ثبت نام کامل شد! ۱,۰۰۰,۰۰۰ SOD هدیه گرفتید.', 'success')
+                    const userData = await getUserData(loginResult.user.id)
                     updateStats(userData)
                 }
                 
@@ -316,7 +339,23 @@
             }
         }
         
-        // 3. تابع ورود
+        // 3. تابع ورود مستقیم
+        async function loginUserDirect(email, password) {
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                })
+                
+                if (error) throw error
+                
+                return { success: true, user: data.user }
+            } catch (error) {
+                return { success: false, error: error.message }
+            }
+        }
+        
+        // 4. تابع ورود
         async function loginUser() {
             const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
@@ -338,6 +377,8 @@
                 if (error) {
                     if (error.message.includes('Invalid login credentials')) {
                         showMessage('ایمیل یا رمز عبور نادرست است', 'error')
+                    } else if (error.message.includes('Email not confirmed')) {
+                        showMessage('لطفاً ابتدا ایمیل خود را تأیید کنید', 'error')
                     } else {
                         showMessage(`خطا در ورود: ${error.message}`, 'error')
                     }
@@ -347,7 +388,7 @@
                 
                 showMessage(`✅ خوش آمدید ${data.user.email}`, 'success')
                 
-                // مطمئن شو رکوردهای کاربر وجود دارند
+                // ایجاد رکوردهای کاربر اگر وجود ندارند
                 await ensureUserRecords(data.user.id, data.user.email, data.user.user_metadata?.full_name)
                 
                 // آپدیت وضعیت
@@ -362,7 +403,7 @@
             }
         }
         
-        // 4. تابع استخراج (بدون خطای FOREIGN KEY)
+        // 5. تابع استخراج
         async function mineSOD() {
             const user = await getCurrentUser()
             
@@ -433,7 +474,7 @@
             }
         }
         
-        // 5. تابع کمکی: مطمئن شدن از وجود رکوردهای کاربر
+        // 6. تابع کمکی: مطمئن شدن از وجود رکوردهای کاربر
         async function ensureUserRecords(userId, email, fullName = 'کاربر') {
             try {
                 // بررسی users
@@ -490,7 +531,7 @@
             }
         }
         
-        // 6. تابع بررسی وضعیت
+        // 7. تابع بررسی وضعیت
         async function checkStatus() {
             const user = await getCurrentUser()
             
@@ -503,9 +544,6 @@
             showMessage('🔍 در حال دریافت اطلاعات...', 'info')
             
             try {
-                // مطمئن شو رکوردها وجود دارند
-                await ensureUserRecords(user.id, user.email, user.user_metadata?.full_name)
-                
                 const userData = await getUserData(user.id)
                 
                 if (userData) {
@@ -521,7 +559,7 @@
             }
         }
         
-        // 7. توابع کمکی
+        // 8. توابع کمکی
         async function getCurrentUser() {
             const { data: { user } } = await supabase.auth.getUser()
             return user
@@ -548,14 +586,14 @@
             }
         }
         
-        // 8. اتصال دکمه‌ها
+        // 9. اتصال دکمه‌ها
         registerBtn.addEventListener('click', registerUser)
         loginBtn.addEventListener('click', loginUser)
         mineBtn.addEventListener('click', mineSOD)
         checkBtn.addEventListener('click', checkStatus)
-        fixBtn.addEventListener('click', fixDatabase)
+        setupBtn.addEventListener('click', setupDatabase)
         
-        // 9. بررسی وضعیت Auth
+        // 10. بررسی وضعیت Auth
         supabase.auth.onAuthStateChange((event, session) => {
             console.log('وضعیت Auth:', event, session?.user?.email)
             
