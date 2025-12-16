@@ -2,81 +2,378 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تست ثبت نام SODmAX</title>
+    <title>SODmAX Pro - نسخه نهایی</title>
     <style>
-        * { font-family: system-ui; }
-        body { background: #0a0f1c; color: white; padding: 20px; }
-        .container { max-width: 400px; margin: 50px auto; }
-        input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; }
-        input { background: #1e293b; border: 1px solid #334155; color: white; }
-        button { background: #0066ff; border: none; color: white; font-weight: bold; cursor: pointer; }
-        button:hover { background: #0052cc; }
-        .success { background: #10b981; padding: 10px; border-radius: 8px; margin: 10px 0; }
-        .error { background: #ef4444; padding: 10px; border-radius: 8px; margin: 10px 0; }
+        * { 
+            font-family: Tahoma, sans-serif;
+            box-sizing: border-box;
+        }
+        body { 
+            background: linear-gradient(135deg, #0a0f1c 0%, #121828 100%);
+            color: white; 
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 500px; 
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        h2 { 
+            text-align: center; 
+            color: #00d4aa;
+            margin-bottom: 25px;
+        }
+        .input-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            border: 1px solid #334155; 
+            background: #1e293b; 
+            color: white;
+            font-size: 16px;
+        }
+        input:focus { 
+            outline: none;
+            border-color: #0066ff;
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+        }
+        .btn { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 8px; 
+            border: none; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 16px;
+            cursor: pointer;
+            margin: 8px 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn-primary { background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%); }
+        .btn-success { background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%); }
+        .btn-warning { background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%); }
+        .btn-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .message { 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            margin: 15px 0;
+            display: none;
+        }
+        .success { 
+            background: rgba(16, 185, 129, 0.2); 
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+        .error { 
+            background: rgba(239, 68, 68, 0.2); 
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+        .info { 
+            background: rgba(59, 130, 246, 0.2); 
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            display: block;
+        }
+        .stats { 
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .stat-row { 
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label { color: #94a3b8; }
+        .stat-value { color: white; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🎯 تست ثبت نام SODmAX</h2>
+        <h2>🎮 SODmAX Pro - نسخه تست</h2>
         
-        <div id="message"></div>
+        <div id="message" class="message"></div>
         
-        <input type="email" id="email" placeholder="ایمیل" value="test@example.com">
-        <input type="password" id="password" placeholder="رمز عبور" value="123456">
-        <input type="text" id="fullName" placeholder="نام کامل" value="کاربر تست">
+        <div class="input-group">
+            <label>ایمیل:</label>
+            <input type="email" id="email" placeholder="example@gmail.com" value="test@sodmax.com">
+        </div>
         
-        <button onclick="register()">ثبت نام</button>
-        <button onclick="login()" style="background: #00d4aa;">ورود</button>
-        <button onclick="mine()" style="background: #ff6b35;">استخراج تست</button>
-        <button onclick="checkUser()" style="background: #8b5cf6;">بررسی کاربر</button>
+        <div class="input-group">
+            <label>رمز عبور:</label>
+            <input type="password" id="password" placeholder="حداقل ۶ کاراکتر" value="123456">
+        </div>
+        
+        <div class="input-group">
+            <label>نام کامل:</label>
+            <input type="text" id="fullName" placeholder="علی محمدی" value="کاربر تست">
+        </div>
+        
+        <button class="btn btn-primary" id="registerBtn">
+            <span>📝</span> ثبت نام
+        </button>
+        
+        <button class="btn btn-success" id="loginBtn">
+            <span>🔑</span> ورود
+        </button>
+        
+        <button class="btn btn-warning" id="mineBtn">
+            <span>⛏️</span> استخراج 100 SOD
+        </button>
+        
+        <button class="btn btn-purple" id="checkBtn">
+            <span>👤</span> بررسی وضعیت
+        </button>
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-row">
+                <span class="stat-label">کاربر:</span>
+                <span class="stat-value" id="statUser">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">موجودی SOD:</span>
+                <span class="stat-value" id="statSOD">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">موجودی USDT:</span>
+                <span class="stat-value" id="statUSDT">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">سطح:</span>
+                <span class="stat-value" id="statLevel">1</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
+            توسعه داده شده توسط SODmAX Pro
+        </div>
     </div>
 
+    <!-- فایل Supabase -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script type="module">
-        import { simpleRegister, simpleLogin, getSimpleUser, simpleMine, simpleLogout, supabase } from './supabase-client-simple.js'
+        // 1. ایمپورت Supabase و ایجاد کلاینت
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
         
-        window.supabase = supabase // برای دیباگ
+        // اطلاعات Supabase شما
+        const supabaseUrl = 'https://qacsoynvoypcwnttfpwh.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhY3NveW52b3lwY3dudHRmcHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4Mjk0NTYsImV4cCI6MjA4MTQwNTQ1Nn0.uvg5O4i89m2w6D0v2YZ7-l7YuERy94j83sSVt-b4uoA'
         
+        const supabase = createClient(supabaseUrl, supabaseAnonKey)
+        
+        // 2. عناصر HTML
+        const messageEl = document.getElementById('message')
+        const registerBtn = document.getElementById('registerBtn')
+        const loginBtn = document.getElementById('loginBtn')
+        const mineBtn = document.getElementById('mineBtn')
+        const checkBtn = document.getElementById('checkBtn')
+        const statsEl = document.getElementById('stats')
+        
+        // 3. توابع کمکی
         function showMessage(text, type = 'info') {
-            const el = document.getElementById('message')
-            el.innerHTML = `<div class="${type}">${text}</div>`
-            console.log(type.toUpperCase() + ':', text)
+            messageEl.textContent = text
+            messageEl.className = `message ${type}`
+            console.log(`${type}: ${text}`)
         }
         
-        async function register() {
-            const email = document.getElementById('email').value
+        function updateStats(userData) {
+            if (userData) {
+                statsEl.style.display = 'block'
+                document.getElementById('statUser').textContent = userData.email || '-'
+                document.getElementById('statSOD').textContent = 
+                    (userData.balance?.sod_balance || 0).toLocaleString('fa-IR') + ' SOD'
+                document.getElementById('statUSDT').textContent = 
+                    (userData.balance?.usdt_balance || 0).toFixed(4) + ' USDT'
+                document.getElementById('statLevel').textContent = 
+                    userData.profile?.user_level || 1
+            } else {
+                statsEl.style.display = 'none'
+            }
+        }
+        
+        // 4. تابع ثبت نام
+        async function registerUser() {
+            const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
-            const fullName = document.getElementById('fullName').value
+            const fullName = document.getElementById('fullName').value.trim()
+            
+            if (!email || !password || !fullName) {
+                showMessage('لطفاً همه فیلدها را پر کنید', 'error')
+                return
+            }
+            
+            if (password.length < 6) {
+                showMessage('رمز عبور باید حداقل ۶ کاراکتر باشد', 'error')
+                return
+            }
             
             showMessage('⏳ در حال ثبت نام...', 'info')
+            registerBtn.disabled = true
             
-            const result = await simpleRegister(email, password, fullName)
-            
-            if (result.success) {
-                showMessage('✅ ' + result.message, 'success')
-                console.log('کاربر ثبت شده:', result.user)
-            } else {
-                showMessage('❌ ' + result.error, 'error')
+            try {
+                // 1. ثبت نام در Auth
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: { full_name: fullName }
+                    }
+                })
+                
+                if (authError) {
+                    // اگر کاربر قبلاً ثبت نام کرده
+                    if (authError.message.includes('already registered')) {
+                        showMessage('این ایمیل قبلاً ثبت شده است', 'error')
+                        registerBtn.disabled = false
+                        return
+                    }
+                    throw authError
+                }
+                
+                showMessage('✅ ثبت نام اولیه موفق بود', 'success')
+                
+                // 2. ایجاد پروفایل در جدول users (اگر نیاز بود)
+                try {
+                    const { error: profileError } = await supabase
+                        .from('users')
+                        .insert({
+                            id: authData.user.id,
+                            email: email,
+                            full_name: fullName,
+                            referral_code: 'USER' + Date.now(),
+                            created_at: new Date().toISOString()
+                        })
+                    
+                    if (profileError && !profileError.message.includes('duplicate key')) {
+                        console.warn('خطا در users:', profileError.message)
+                    }
+                } catch (e) {
+                    console.warn('خطا در ایجاد پروفایل:', e)
+                }
+                
+                // 3. ایجاد موجودی (1,000,000 SOD هدیه)
+                try {
+                    await supabase
+                        .from('user_balances')
+                        .upsert({
+                            user_id: authData.user.id,
+                            sod_balance: 1000000,
+                            usdt_balance: 0,
+                            last_update: new Date().toISOString()
+                        })
+                } catch (e) {
+                    console.warn('خطا در ایجاد موجودی:', e)
+                }
+                
+                // 4. ایجاد پروفایل بازی
+                try {
+                    await supabase
+                        .from('user_profiles')
+                        .upsert({
+                            user_id: authData.user.id,
+                            user_level: 1,
+                            mining_power: 10,
+                            total_mined: 0,
+                            last_active: new Date().toISOString()
+                        })
+                } catch (e) {
+                    console.warn('خطا در پروفایل بازی:', e)
+                }
+                
+                showMessage('🎉 ثبت نام کامل شد! ۱,۰۰۰,۰۰۰ SOD هدیه گرفتید.', 'success')
+                
+                // آپدیت وضعیت
+                const user = await getCurrentUser()
+                if (user) {
+                    const userData = await getUserData(user.id)
+                    updateStats(userData)
+                }
+                
+            } catch (error) {
+                console.error('خطای ثبت نام:', error)
+                showMessage(`❌ خطا در ثبت نام: ${error.message}`, 'error')
+            } finally {
+                registerBtn.disabled = false
             }
         }
         
-        async function login() {
-            const email = document.getElementById('email').value
+        // 5. تابع ورود
+        async function loginUser() {
+            const email = document.getElementById('email').value.trim()
             const password = document.getElementById('password').value
             
+            if (!email || !password) {
+                showMessage('لطفاً ایمیل و رمز را وارد کنید', 'error')
+                return
+            }
+            
             showMessage('⏳ در حال ورود...', 'info')
+            loginBtn.disabled = true
             
-            const result = await simpleLogin(email, password)
-            
-            if (result.success) {
-                showMessage('✅ ' + result.message, 'success')
-                console.log('کاربر وارد شده:', result.user)
-            } else {
-                showMessage('❌ ' + result.error, 'error')
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                })
+                
+                if (error) {
+                    if (error.message.includes('Invalid login credentials')) {
+                        showMessage('ایمیل یا رمز عبور نادرست است', 'error')
+                    } else {
+                        showMessage(`خطا در ورود: ${error.message}`, 'error')
+                    }
+                    loginBtn.disabled = false
+                    return
+                }
+                
+                showMessage(`✅ خوش آمدید ${data.user.email}`, 'success')
+                
+                // آپدیت وضعیت
+                const userData = await getUserData(data.user.id)
+                updateStats(userData)
+                
+            } catch (error) {
+                console.error('خطای ورود:', error)
+                showMessage('خطا در ورود به سیستم', 'error')
+            } finally {
+                loginBtn.disabled = false
             }
         }
         
-        async function mine() {
-            const user = await getSimpleUser()
+        // 6. تابع استخراج
+        async function mineSOD() {
+            const user = await getCurrentUser()
             
             if (!user) {
                 showMessage('❌ ابتدا وارد شوید', 'error')
@@ -84,33 +381,161 @@
             }
             
             showMessage('⛏️ در حال استخراج...', 'info')
+            mineBtn.disabled = true
             
-            const result = await simpleMine(user.id, 100)
-            
-            if (result.success) {
-                showMessage('✅ ' + result.message, 'success')
-            } else {
-                showMessage('❌ ' + result.error, 'error')
+            try {
+                // دریافت قدرت استخراج
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('mining_power')
+                    .eq('user_id', user.id)
+                    .single()
+                    
+                const miningPower = profile?.mining_power || 10
+                const minedAmount = miningPower * 10 // 10x
+                
+                // آپدیت موجودی
+                await supabase.rpc('increment_sod_balance', {
+                    user_id: user.id,
+                    amount: minedAmount
+                }).catch(async () => {
+                    // اگر تابع وجود ندارد، دستی انجام بده
+                    const { data: currentBalance } = await supabase
+                        .from('user_balances')
+                        .select('sod_balance')
+                        .eq('user_id', user.id)
+                        .single()
+                        
+                    const newBalance = (currentBalance?.sod_balance || 0) + minedAmount
+                    
+                    await supabase
+                        .from('user_balances')
+                        .update({ sod_balance: newBalance })
+                        .eq('user_id', user.id)
+                })
+                
+                // آپدیت پروفایل
+                await supabase
+                    .from('user_profiles')
+                    .update({
+                        total_mined: supabase.raw('total_mined + ' + minedAmount),
+                        last_active: new Date().toISOString()
+                    })
+                    .eq('user_id', user.id)
+                
+                // ثبت تراکنش
+                await supabase
+                    .from('transactions')
+                    .insert({
+                        user_id: user.id,
+                        transaction_type: 'mining',
+                        amount: minedAmount,
+                        currency: 'SOD',
+                        description: `استخراج ${minedAmount} SOD`,
+                        created_at: new Date().toISOString()
+                    })
+                
+                showMessage(`✅ ${minedAmount} SOD استخراج شد!`, 'success')
+                
+                // آپدیت وضعیت
+                const userData = await getUserData(user.id)
+                updateStats(userData)
+                
+            } catch (error) {
+                console.error('خطای استخراج:', error)
+                showMessage('خطا در استخراج', 'error')
+            } finally {
+                mineBtn.disabled = false
             }
         }
         
-        async function checkUser() {
-            const user = await getSimpleUser()
+        // 7. تابع بررسی وضعیت
+        async function checkStatus() {
+            const user = await getCurrentUser()
             
-            if (user) {
-                showMessage(`👤 کاربر وارد شده: ${user.email}<br>ID: ${user.id}`, 'success')
-                console.log('کاربر فعلی:', user)
-            } else {
+            if (!user) {
                 showMessage('❌ هیچ کاربری وارد نشده است', 'error')
+                statsEl.style.display = 'none'
+                return
+            }
+            
+            showMessage('🔍 در حال دریافت اطلاعات...', 'info')
+            
+            try {
+                const userData = await getUserData(user.id)
+                
+                if (userData) {
+                    showMessage(`✅ کاربر: ${user.email}`, 'success')
+                    updateStats(userData)
+                } else {
+                    showMessage('❌ اطلاعات کاربر یافت نشد', 'error')
+                }
+                
+            } catch (error) {
+                console.error('خطای بررسی:', error)
+                showMessage('خطا در دریافت اطلاعات', 'error')
             }
         }
         
-        // بررسی وضعیت اولیه
+        // 8. توابع کمکی
+        async function getCurrentUser() {
+            const { data: { user } } = await supabase.auth.getUser()
+            return user
+        }
+        
+        async function getUserData(userId) {
+            try {
+                // موجودی
+                const { data: balance } = await supabase
+                    .from('user_balances')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single()
+                
+                // پروفایل
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single()
+                
+                return {
+                    email: (await supabase.auth.getUser()).data.user?.email,
+                    balance: balance || { sod_balance: 0, usdt_balance: 0 },
+                    profile: profile || { user_level: 1, mining_power: 10, total_mined: 0 }
+                }
+            } catch (error) {
+                console.error('خطای دریافت اطلاعات:', error)
+                return null
+            }
+        }
+        
+        // 9. اتصال دکمه‌ها به توابع
+        registerBtn.addEventListener('click', registerUser)
+        loginBtn.addEventListener('click', loginUser)
+        mineBtn.addEventListener('click', mineSOD)
+        checkBtn.addEventListener('click', checkStatus)
+        
+        // 10. بررسی وضعیت اولیه
         supabase.auth.onAuthStateChange((event, session) => {
-            console.log('🔄 وضعیت Auth تغییر کرد:', event, session?.user?.email)
+            console.log('وضعیت Auth تغییر کرد:', event, session?.user?.email)
+            
+            if (event === 'SIGNED_IN' && session?.user) {
+                getUserData(session.user.id).then(updateStats)
+            }
         })
         
-        console.log('🎮 تست ثبت نام SODmAX آماده است')
+        // بررسی اولیه
+        setTimeout(async () => {
+            const user = await getCurrentUser()
+            if (user) {
+                showMessage(`👋 خوش آمدید ${user.email}`, 'success')
+                const userData = await getUserData(user.id)
+                updateStats(userData)
+            }
+        }, 1000)
+        
+        console.log('🎮 SODmAX Pro آماده است!')
     </script>
 </body>
 </html>
